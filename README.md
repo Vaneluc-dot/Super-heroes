@@ -232,6 +232,49 @@ index.html
             font-size: 2rem;
         }
 
+        .message-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1001;
+            max-width: 400px;
+        }
+
+        .purchase-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, #FFD700, #FFA500);
+            color: #333;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1001;
+            max-width: 500px;
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 1000;
+        }
+
         @media (max-width: 768px) {
             .game-board {
                 grid-template-columns: repeat(3, 1fr);
@@ -323,6 +366,33 @@ index.html
   <div class="victory-message" id="victoryMessage">
    <h2>🎉 ¡FELICITACIONES! 🎉</h2>
    <div class="victory-stats" id="victoryStats"></div><button class="btn" onclick="startNewGame()">Jugar de Nuevo</button>
+  </div><!-- Modal backdrop -->
+  <div class="modal-backdrop" id="modalBackdrop" onclick="closeModals()"></div><!-- Message modal -->
+  <div class="message-modal" id="messageModal">
+   <div id="messageText"></div><button class="btn" onclick="closeModals()" style="margin-top: 20px;">OK</button>
+  </div><!-- Purchase modal -->
+  <div class="purchase-modal" id="purchaseModal">
+   <h2>🌟 DESBLOQUEAR PREMIUM 🌟</h2>
+   <div style="font-size: 2rem; margin: 20px 0;">
+    $2.99
+   </div>
+   <div style="text-align: left; margin: 20px 0;">
+    <div>
+     ✅ 12 superhéroes adicionales
+    </div>
+    <div>
+     ✅ Modo difícil (6x4 cartas)
+    </div>
+    <div>
+     ✅ Modo experto (6x6 cartas)
+    </div>
+    <div>
+     ✅ Pistas ilimitadas
+    </div>
+    <div>
+     ✅ Temas especiales
+    </div>
+   </div><button class="btn" onclick="purchasePremium()" style="margin: 10px;">💳 Comprar Ahora</button> <button class="btn" onclick="closeModals()" style="margin: 10px; background: #666;">Cancelar</button>
   </div>
   <script>
         // Superhéroes expandidos
@@ -491,7 +561,8 @@ index.html
                 updateStats();
                 
                 // Verificar victoria
-                if (gameState.matchedPairs === superheroes.length) {
+                const totalPairs = gameState.cards.length / 2;
+                if (gameState.matchedPairs === totalPairs) {
                     setTimeout(() => {
                         showVictory();
                     }, 500);
@@ -550,7 +621,7 @@ index.html
         function showHint() {
             // Límite de pistas para usuarios gratuitos
             if (!isPremium && gameState.hintsUsed >= 3) {
-                alert('🌟 ¡Límite de pistas alcanzado! Desbloquea Premium para pistas ilimitadas.');
+                showMessage('🌟 ¡Límite de pistas alcanzado! Desbloquea Premium para pistas ilimitadas.');
                 return;
             }
             
@@ -587,14 +658,8 @@ index.html
                 const panel = document.getElementById('premiumPanel');
                 panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
             } else {
-                // Simular compra (en producción sería Stripe/PayPal)
-                if (confirm('🌟 ¿Desbloquear Premium por $2.99?\n\n✅ 12 superhéroes adicionales\n✅ Modo difícil y experto\n✅ Pistas ilimitadas\n✅ Temas especiales')) {
-                    isPremium = true;
-                    localStorage.setItem('isPremium', 'true');
-                    updatePremiumUI();
-                    initGame();
-                    alert('🎉 ¡Premium desbloqueado! Disfruta todas las funciones.');
-                }
+                // Mostrar modal de compra
+                showPurchaseModal();
             }
         }
 
@@ -626,12 +691,39 @@ index.html
 
         function setDifficulty(level) {
             if ((level === 'hard' || level === 'expert') && !isPremium) {
-                alert('🌟 Esta dificultad requiere Premium. ¡Desbloquéalo por solo $2.99!');
+                showMessage('🌟 Esta dificultad requiere Premium. ¡Desbloquéalo por solo $2.99!');
                 return;
             }
             
             gameState.difficulty = level;
             initGame();
+        }
+
+        function showMessage(text) {
+            document.getElementById('messageText').textContent = text;
+            document.getElementById('modalBackdrop').style.display = 'block';
+            document.getElementById('messageModal').style.display = 'block';
+        }
+
+        function showPurchaseModal() {
+            document.getElementById('modalBackdrop').style.display = 'block';
+            document.getElementById('purchaseModal').style.display = 'block';
+        }
+
+        function closeModals() {
+            document.getElementById('modalBackdrop').style.display = 'none';
+            document.getElementById('messageModal').style.display = 'none';
+            document.getElementById('purchaseModal').style.display = 'none';
+        }
+
+        function purchasePremium() {
+            // Simular compra (en producción sería Stripe/PayPal)
+            isPremium = true;
+            localStorage.setItem('isPremium', 'true');
+            updatePremiumUI();
+            initGame();
+            closeModals();
+            showMessage('🎉 ¡Premium desbloqueado! Disfruta todas las funciones.');
         }
 
         // Inicializar juego al cargar
@@ -640,5 +732,5 @@ index.html
             updatePremiumUI();
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'995d4be747f3db36',t:'MTc2MTY4NDUzMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'995d6a37d3d7db36',t:'MTc2MTY4NTc3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
