@@ -1,0 +1,3160 @@
+<!doctype html>
+<html lang="es">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Centro de Seguridad Doméstica Completo</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        /* Theme Variables */
+        :root {
+            --primary-bg: #f0f9ff;
+            --secondary-bg: #ffffff;
+            --accent-color: #3b82f6;
+            --text-color: #1f2937;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+        }
+        
+        [data-theme="dark"] {
+            --primary-bg: #1f2937;
+            --secondary-bg: #374151;
+            --accent-color: #60a5fa;
+            --text-color: #f9fafb;
+            --success-color: #34d399;
+            --danger-color: #f87171;
+            --warning-color: #fbbf24;
+        }
+        
+        [data-theme="pastel"] {
+            --primary-bg: #fdf2f8;
+            --secondary-bg: #fce7f3;
+            --accent-color: #ec4899;
+            --text-color: #831843;
+            --success-color: #059669;
+            --danger-color: #dc2626;
+            --warning-color: #d97706;
+        }
+        
+        [data-theme="high-contrast"] {
+            --primary-bg: #000000;
+            --secondary-bg: #ffffff;
+            --accent-color: #0000ff;
+            --text-color: #ffffff;
+            --success-color: #00ff00;
+            --danger-color: #ff0000;
+            --warning-color: #ffff00;
+        }
+        
+        body {
+            background: var(--primary-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+        
+        .themed-bg {
+            background: var(--secondary-bg);
+        }
+        
+        .themed-accent {
+            background: var(--accent-color);
+        }
+        
+        .danger-spot {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        .danger-spot:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .found {
+            animation: bounce 0.6s ease;
+            background: linear-gradient(45deg, #10b981, #34d399) !important;
+            border-color: #059669 !important;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .celebration {
+            animation: celebrate 1s ease;
+        }
+        
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .avatar-option {
+            transition: all 0.3s ease;
+        }
+        
+        .avatar-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .avatar-option.selected {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+        
+        /* Much larger emojis and icons throughout the app */
+        .main-logo {
+            font-size: 12rem !important;
+        }
+        
+        .section-emoji {
+            font-size: 8rem !important;
+        }
+        
+        .room-emoji {
+            font-size: 7rem !important;
+        }
+        
+        .avatar-emoji {
+            font-size: 5rem !important;
+        }
+        
+        .danger-emoji {
+            font-size: 4.5rem !important;
+        }
+        
+        .medium-emoji {
+            font-size: 3.5rem !important;
+        }
+        
+        .small-emoji {
+            font-size: 3rem !important;
+        }
+        
+        .room-card {
+            transition: all 0.3s ease;
+        }
+        
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .sticker {
+            animation: stickerPop 0.5s ease;
+        }
+        
+        @keyframes stickerPop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .medal {
+            animation: medalShine 2s ease infinite;
+        }
+        
+        @keyframes medalShine {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+        
+        .floating-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .multiplayer-indicator {
+            animation: blink 1s ease infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.5; }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="min-h-full font-sans" data-theme="default"><!-- Theme Selector -->
+  <div id="theme-selector" class="fixed top-4 left-4 z-50"><select id="theme-select" class="bg-white border-2 border-gray-300 rounded-lg px-3 py-1 text-sm"> <option value="default">🌟 Normal</option> <option value="dark">🌙 Nocturno</option> <option value="pastel">🌸 Pastel</option> <option value="high-contrast">⚡ Alto Contraste</option> </select>
+  </div><!-- Floating Notifications -->
+  <div id="notifications-container"></div><!-- Main Menu -->
+  <div id="main-menu" class="min-h-full flex items-center justify-center p-4">
+   <div class="themed-bg rounded-3xl shadow-2xl p-8 max-w-4xl w-full">
+    <div class="text-center mb-8">
+     <div class="main-logo mb-6">
+      🏠
+     </div>
+     <h1 id="app-title" class="text-4xl font-bold mb-4" style="color: var(--accent-color)">Centro de Seguridad Doméstica</h1>
+     <p id="welcome-message" class="text-xl mb-8" style="color: var(--text-color)">¡Aprende seguridad doméstica jugando!</p>
+    </div><!-- Game Mode Selection -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"><button onclick="showWelcome()" class="themed-accent text-white p-6 rounded-2xl hover:opacity-90 transition-all">
+      <div class="section-emoji mb-2">
+       🎮
+      </div>
+      <div class="font-bold">
+       Modo Clásico
+      </div>
+      <div class="text-sm opacity-90">
+       Juego individual
+      </div></button> <button onclick="showMultiplayer()" class="bg-purple-500 text-white p-6 rounded-2xl hover:bg-purple-600 transition-all">
+      <div class="section-emoji mb-2">
+       👥
+      </div>
+      <div class="font-bold">
+       Multijugador
+      </div>
+      <div class="text-sm opacity-90">
+       Jugar con amigos
+      </div></button> <button onclick="showDailyChallenge()" class="bg-orange-500 text-white p-6 rounded-2xl hover:bg-orange-600 transition-all">
+      <div class="section-emoji mb-2">
+       📅
+      </div>
+      <div class="font-bold">
+       Desafío Diario
+      </div>
+      <div class="text-sm opacity-90">
+       Reto especial
+      </div></button> <button onclick="showSurvivalMode()" class="bg-red-500 text-white p-6 rounded-2xl hover:bg-red-600 transition-all">
+      <div class="section-emoji mb-2">
+       ⚡
+      </div>
+      <div class="font-bold">
+       Supervivencia
+      </div>
+      <div class="text-sm opacity-90">
+       Modo extremo
+      </div></button>
+    </div><!-- Additional Features -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8"><button onclick="showEducationalContent()" class="bg-green-500 text-white p-4 rounded-xl hover:bg-green-600 transition-all">
+      <div class="medium-emoji mb-1">
+       📚
+      </div>
+      <div class="font-semibold">
+       Guías de Seguridad
+      </div></button> <button onclick="showCustomRooms()" class="bg-indigo-500 text-white p-4 rounded-xl hover:bg-indigo-600 transition-all">
+      <div class="medium-emoji mb-1">
+       🏗️
+      </div>
+      <div class="font-semibold">
+       Crear Habitaciones
+      </div></button> <button onclick="showParentDashboard()" class="bg-gray-500 text-white p-4 rounded-xl hover:bg-gray-600 transition-all">
+      <div class="medium-emoji mb-1">
+       👨‍👩‍👧‍👦
+      </div>
+      <div class="font-semibold">
+       Panel de Padres
+      </div></button>
+    </div><!-- Player Progress Summary -->
+    <div id="progress-summary" class="themed-bg border-2 border-gray-200 rounded-2xl p-6">
+     <h3 class="text-xl font-bold mb-4">Tu Progreso</h3>
+     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="text-center">
+       <div class="text-2xl font-bold" style="color: var(--success-color)" id="total-score-display">
+        0
+       </div>
+       <div class="text-sm">
+        Puntos Totales
+       </div>
+      </div>
+      <div class="text-center">
+       <div class="text-2xl font-bold" style="color: var(--accent-color)" id="rooms-completed-display">
+        0
+       </div>
+       <div class="text-sm">
+        Habitaciones
+       </div>
+      </div>
+      <div class="text-center">
+       <div class="text-2xl font-bold" style="color: var(--warning-color)" id="stickers-count-display">
+        0
+       </div>
+       <div class="text-sm">
+        Stickers
+       </div>
+      </div>
+      <div class="text-center">
+       <div class="text-2xl font-bold" style="color: var(--danger-color)" id="medals-count-display">
+        0
+       </div>
+       <div class="text-sm">
+        Medallas
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div><!-- Welcome Screen (Player Setup) -->
+  <div id="welcome-screen" class="min-h-full flex items-center justify-center p-4 hidden">
+   <div class="themed-bg rounded-3xl shadow-2xl p-8 max-w-2xl w-full text-center"><button onclick="showMainMenu()" class="absolute top-4 left-4 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"> ← Menú </button>
+    <div class="main-logo mb-6">
+     🏠
+    </div>
+    <h1 class="text-4xl font-bold mb-4" style="color: var(--accent-color)">¡Comencemos!</h1>
+    <p class="text-xl mb-8" style="color: var(--text-color)">Configura tu perfil de jugador</p><!-- Avatar Selection -->
+    <div class="mb-6">
+     <h3 class="text-lg font-semibold mb-4">Elige tu avatar:</h3>
+     <div id="avatar-grid" class="grid grid-cols-4 md:grid-cols-6 gap-3 justify-center"><!-- Basic avatars -->
+      <div class="avatar-option themed-bg p-3 rounded-xl cursor-pointer border-3 border-transparent" data-avatar="👦" data-unlocked="true">
+       <div class="avatar-emoji">
+        👦
+       </div>
+       <div class="text-xs mt-1">
+        Niño
+       </div>
+      </div>
+      <div class="avatar-option themed-bg p-3 rounded-xl cursor-pointer border-3 border-transparent" data-avatar="👧" data-unlocked="true">
+       <div class="avatar-emoji">
+        👧
+       </div>
+       <div class="text-xs mt-1">
+        Niña
+       </div>
+      </div><!-- Unlockable avatars -->
+      <div class="avatar-option bg-gray-200 p-3 rounded-xl cursor-pointer border-3 border-transparent opacity-50" data-avatar="🦸‍♂️" data-unlocked="false">
+       <div class="avatar-emoji">
+        🦸‍♂️
+       </div>
+       <div class="text-xs mt-1">
+        Héroe
+       </div>
+       <div class="text-xs text-red-500">
+        🔒
+       </div>
+      </div>
+      <div class="avatar-option bg-gray-200 p-3 rounded-xl cursor-pointer border-3 border-transparent opacity-50" data-avatar="🦸‍♀️" data-unlocked="false">
+       <div class="avatar-emoji">
+        🦸‍♀️
+       </div>
+       <div class="text-xs mt-1">
+        Heroína
+       </div>
+       <div class="text-xs text-red-500">
+        🔒
+       </div>
+      </div>
+      <div class="avatar-option bg-gray-200 p-3 rounded-xl cursor-pointer border-3 border-transparent opacity-50" data-avatar="👨‍🚒" data-unlocked="false">
+       <div class="avatar-emoji">
+        👨‍🚒
+       </div>
+       <div class="text-xs mt-1">
+        Bombero
+       </div>
+       <div class="text-xs text-red-500">
+        🔒
+       </div>
+      </div>
+      <div class="avatar-option bg-gray-200 p-3 rounded-xl cursor-pointer border-3 border-transparent opacity-50" data-avatar="👩‍⚕️" data-unlocked="false">
+       <div class="avatar-emoji">
+        👩‍⚕️
+       </div>
+       <div class="text-xs mt-1">
+        Doctora
+       </div>
+       <div class="text-xs text-red-500">
+        🔒
+       </div>
+      </div>
+      <div class="avatar-option bg-gray-200 p-3 rounded-xl cursor-pointer border-3 border-transparent opacity-50" data-avatar="👮‍♂️" data-unlocked="false">
+       <div class="avatar-emoji">
+        👮‍♂️
+       </div>
+       <div class="text-xs mt-1">
+        Policía
+       </div>
+       <div class="text-xs text-red-500">
+        🔒
+       </div>
+      </div>
+      <div class="avatar-option bg-gray-200 p-3 rounded-xl cursor-pointer border-3 border-transparent opacity-50" data-avatar="👩‍🚒" data-unlocked="false">
+       <div class="avatar-emoji">
+        👩‍🚒
+       </div>
+       <div class="text-xs mt-1">
+        Bombera
+       </div>
+       <div class="text-xs text-red-500">
+        🔒
+       </div>
+      </div>
+     </div>
+    </div><input type="text" id="player-name" placeholder="Escribe tu nombre aquí" class="w-full p-4 border-2 border-gray-300 rounded-xl mb-6 text-center text-lg focus:border-blue-500 focus:outline-none themed-bg"> <!-- Voice Controls -->
+    <div class="mb-6 themed-bg rounded-xl p-4 border-2 border-gray-200">
+     <h4 class="text-lg font-semibold mb-3" style="color: var(--accent-color)">🔊 Controles de Voz</h4>
+     <div class="flex items-center justify-center space-x-4 flex-wrap"><button id="voice-toggle" class="themed-accent text-white px-4 py-2 rounded-lg flex items-center space-x-2"> <span>🔊</span> <span>Voz: ON</span> </button> <button id="speak-welcome" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"> 🎤 Escuchar Bienvenida </button>
+     </div>
+     <div class="mt-3 flex items-center justify-center space-x-4 flex-wrap"><label class="text-sm">Velocidad:</label> <input type="range" id="speech-rate" min="0.5" max="1.5" step="0.1" value="0.9" class="w-20"> <label class="text-sm">Volumen:</label> <input type="range" id="speech-volume" min="0.1" max="1" step="0.1" value="0.8" class="w-20">
+     </div>
+    </div><button id="start-game" class="bg-gradient-to-r from-green-500 to-blue-500 text-white px-8 py-4 rounded-xl text-xl font-bold hover:from-green-600 hover:to-blue-600 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed" disabled> 🚀 ¡Comenzar Aventura! </button>
+   </div>
+  </div><!-- Multiplayer Setup -->
+  <div id="multiplayer-screen" class="min-h-full flex items-center justify-center p-4 hidden">
+   <div class="themed-bg rounded-3xl shadow-2xl p-8 max-w-3xl w-full"><button onclick="showMainMenu()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg mb-6"> ← Menú </button>
+    <div class="text-center mb-8">
+     <div class="section-emoji mb-4">
+      👥
+     </div>
+     <h2 class="text-3xl font-bold mb-4" style="color: var(--accent-color)">Modo Multijugador</h2>
+     <p class="text-lg" style="color: var(--text-color)">¡Juega con tus amigos por turnos!</p>
+    </div>
+    <div id="players-setup" class="space-y-4 mb-8">
+     <div class="flex items-center space-x-4 p-4 themed-bg rounded-xl border-2 border-gray-200">
+      <div class="avatar-emoji">
+       👦
+      </div><input type="text" placeholder="Nombre del Jugador 1" class="flex-1 p-2 border rounded-lg themed-bg"> <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">❌</button>
+     </div>
+     <div class="flex items-center space-x-4 p-4 themed-bg rounded-xl border-2 border-gray-200">
+      <div class="avatar-emoji">
+       👧
+      </div><input type="text" placeholder="Nombre del Jugador 2" class="flex-1 p-2 border rounded-lg themed-bg"> <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">❌</button>
+     </div>
+    </div>
+    <div class="text-center space-x-4"><button onclick="addPlayer()" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl"> ➕ Agregar Jugador </button> <button onclick="startMultiplayerGame()" class="themed-accent text-white px-8 py-3 rounded-xl"> 🎮 Comenzar Partida </button>
+    </div>
+   </div>
+  </div><!-- Daily Challenge -->
+  <div id="daily-challenge-screen" class="min-h-full flex items-center justify-center p-4 hidden">
+   <div class="themed-bg rounded-3xl shadow-2xl p-8 max-w-2xl w-full text-center"><button onclick="showMainMenu()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg mb-6"> ← Menú </button>
+    <div class="section-emoji mb-4">
+     📅
+    </div>
+    <h2 class="text-3xl font-bold mb-4" style="color: var(--accent-color)">Desafío Diario</h2>
+    <p class="text-lg mb-8" style="color: var(--text-color)">¡Un reto especial cada día!</p>
+    <div id="daily-challenge-content" class="themed-bg rounded-2xl p-6 border-2 border-gray-200 mb-8">
+     <div class="room-emoji mb-4">
+      🏠
+     </div>
+     <h3 class="text-xl font-bold mb-2">Habitación Misteriosa</h3>
+     <p class="text-gray-600 mb-4">Una habitación especial con peligros únicos que cambia cada día</p>
+     <div class="grid grid-cols-3 gap-4 text-center">
+      <div>
+       <div class="text-2xl font-bold text-yellow-600">
+        ⭐ 500
+       </div>
+       <div class="text-sm">
+        Puntos Extra
+       </div>
+      </div>
+      <div>
+       <div class="text-2xl font-bold text-purple-600">
+        🎁 1
+       </div>
+       <div class="text-sm">
+        Sticker Especial
+       </div>
+      </div>
+      <div>
+       <div class="text-2xl font-bold text-red-600">
+        ⏰ 60s
+       </div>
+       <div class="text-sm">
+        Tiempo Límite
+       </div>
+      </div>
+     </div>
+    </div>
+    <div id="daily-status" class="mb-6">
+     <div class="text-green-600 font-semibold">
+      ✅ ¡Disponible hoy!
+     </div>
+    </div><button onclick="startDailyChallenge()" class="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-4 rounded-xl text-xl font-bold hover:from-orange-600 hover:to-red-600 transition-all"> 🚀 Aceptar Desafío </button>
+   </div>
+  </div><!-- Survival Mode Screen -->
+  <div id="survival-mode-screen" class="min-h-full flex items-center justify-center p-4 hidden">
+   <div class="themed-bg rounded-3xl shadow-2xl p-8 max-w-2xl w-full text-center"><button onclick="showMainMenu()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg mb-6"> ← Menú </button>
+    <div class="section-emoji mb-4">
+     ⚡
+    </div>
+    <h2 class="text-3xl font-bold mb-4" style="color: var(--accent-color)">Modo Supervivencia</h2>
+    <p class="text-lg mb-8" style="color: var(--text-color)">¡Habitaciones infinitas con dificultad creciente!</p>
+    <div class="themed-bg rounded-2xl p-6 border-2 border-gray-200 mb-8">
+     <div class="room-emoji mb-4">
+      💀
+     </div>
+     <h3 class="text-xl font-bold mb-2">Desafío Extremo</h3>
+     <p class="text-gray-600 mb-4">Sobrevive el mayor tiempo posible encontrando peligros</p>
+     <div class="grid grid-cols-3 gap-4 text-center">
+      <div>
+       <div class="text-2xl font-bold text-red-600">
+        ❤️ 3
+       </div>
+       <div class="text-sm">
+        Vidas
+       </div>
+      </div>
+      <div>
+       <div class="text-2xl font-bold text-orange-600">
+        📈
+       </div>
+       <div class="text-sm">
+        Dificultad Creciente
+       </div>
+      </div>
+      <div>
+       <div class="text-2xl font-bold text-purple-600" id="survival-record">
+        0
+       </div>
+       <div class="text-sm">
+        Récord Personal
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="mb-6">
+     <h4 class="font-semibold mb-2">Reglas del Modo Supervivencia:</h4>
+     <div class="text-sm text-left space-y-1">
+      <div>
+       • Tienes 3 vidas para empezar
+      </div>
+      <div>
+       • Cada error te quita una vida
+      </div>
+      <div>
+       • El tiempo se reduce cada nivel
+      </div>
+      <div>
+       • Los peligros se vuelven más difíciles
+      </div>
+      <div>
+       • ¡Sobrevive el mayor tiempo posible!
+      </div>
+     </div>
+    </div><button onclick="startSurvivalMode()" class="bg-gradient-to-r from-red-500 to-purple-500 text-white px-8 py-4 rounded-xl text-xl font-bold hover:from-red-600 hover:to-purple-600 transition-all"> 💀 ¡Comenzar Supervivencia! </button>
+   </div>
+  </div><!-- Educational Content -->
+  <div id="educational-screen" class="min-h-full p-4 hidden">
+   <div class="max-w-4xl mx-auto"><button onclick="showMainMenu()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg mb-6"> ← Menú </button>
+    <div class="text-center mb-8">
+     <div class="section-emoji mb-4">
+      📚
+     </div>
+     <h2 class="text-3xl font-bold mb-4" style="color: var(--accent-color)">Guías de Seguridad</h2>
+     <p class="text-lg" style="color: var(--text-color)">Aprende más sobre seguridad doméstica</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6"><!-- First Aid Guide -->
+     <div class="themed-bg rounded-2xl p-6 shadow-lg">
+      <div class="room-emoji mb-4">
+       🚑
+      </div>
+      <h3 class="text-xl font-bold mb-4">Primeros Auxilios</h3>
+      <div class="space-y-3 text-sm">
+       <div class="flex items-start space-x-2"><span class="text-red-500 small-emoji">🩹</span>
+        <div><strong>Cortadas pequeñas:</strong> Lava con agua, presiona con gasa limpia y cubre con curita.
+        </div>
+       </div>
+       <div class="flex items-start space-x-2"><span class="text-blue-500 small-emoji">🧊</span>
+        <div><strong>Golpes:</strong> Aplica hielo envuelto en tela por 10-15 minutos.
+        </div>
+       </div>
+       <div class="flex items-start space-x-2"><span class="text-orange-500 small-emoji">🔥</span>
+        <div><strong>Quemaduras leves:</strong> Agua fría por 10-20 minutos. NO uses hielo.
+        </div>
+       </div>
+      </div><button onclick="speakFirstAid()" class="mt-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"> 🎤 Escuchar Guía </button>
+     </div><!-- Emergency Numbers -->
+     <div class="themed-bg rounded-2xl p-6 shadow-lg">
+      <div class="room-emoji mb-4">
+       📞
+      </div>
+      <h3 class="text-xl font-bold mb-4">Números de Emergencia</h3>
+      <div class="space-y-3">
+       <div class="flex items-center justify-between p-3 bg-red-100 rounded-lg">
+        <div>
+         <div class="font-bold">
+          Emergencias
+         </div>
+         <div class="text-sm text-gray-600">
+          Policía, Bomberos, Ambulancia
+         </div>
+        </div>
+        <div class="text-2xl font-bold text-red-600" id="emergency-number">
+         911
+        </div>
+       </div>
+       <div class="flex items-center justify-between p-3 bg-blue-100 rounded-lg">
+        <div>
+         <div class="font-bold">
+          Centro de Toxicología
+         </div>
+         <div class="text-sm text-gray-600">
+          Envenenamientos
+         </div>
+        </div>
+        <div class="text-lg font-bold text-blue-600">
+         1-800-222-1222
+        </div>
+       </div>
+      </div><button onclick="speakEmergencyNumbers()" class="mt-4 themed-accent text-white px-4 py-2 rounded-lg"> 🎤 Escuchar Números </button>
+     </div><!-- Evacuation Plan -->
+     <div class="themed-bg rounded-2xl p-6 shadow-lg">
+      <div class="room-emoji mb-4">
+       🚪
+      </div>
+      <h3 class="text-xl font-bold mb-4">Plan de Evacuación</h3>
+      <div class="space-y-3 text-sm">
+       <div class="flex items-start space-x-2"><span class="text-green-500 small-emoji">1️⃣</span>
+        <div>
+         <strong>Identifica</strong> todas las salidas de tu casa
+        </div>
+       </div>
+       <div class="flex items-start space-x-2"><span class="text-blue-500 small-emoji">2️⃣</span>
+        <div>
+         <strong>Practica</strong> la ruta más rápida desde cada habitación
+        </div>
+       </div>
+       <div class="flex items-start space-x-2"><span class="text-purple-500 small-emoji">3️⃣</span>
+        <div>
+         <strong>Punto de encuentro</strong> fuera de casa (árbol, buzón, etc.)
+        </div>
+       </div>
+       <div class="flex items-start space-x-2"><span class="text-orange-500 small-emoji">4️⃣</span>
+        <div>
+         <strong>Nunca regreses</strong> por objetos olvidados
+        </div>
+       </div>
+      </div><button onclick="startEvacuationDrill()" class="mt-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"> 🏃‍♂️ Practicar Simulacro </button>
+     </div><!-- Seasonal Safety -->
+     <div class="themed-bg rounded-2xl p-6 shadow-lg">
+      <div class="room-emoji mb-4">
+       🌦️
+      </div>
+      <h3 class="text-xl font-bold mb-4">Seguridad por Temporada</h3>
+      <div id="seasonal-content"><!-- Dynamic content based on current season -->
+      </div><button onclick="updateSeasonalTips()" class="mt-4 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg"> 🔄 Actualizar Tips </button>
+     </div>
+    </div>
+   </div>
+  </div><!-- Custom Room Builder -->
+  <div id="custom-rooms-screen" class="min-h-full p-4 hidden">
+   <div class="max-w-4xl mx-auto"><button onclick="showMainMenu()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg mb-6"> ← Menú </button>
+    <div class="text-center mb-8">
+     <div class="section-emoji mb-4">
+      🏗️
+     </div>
+     <h2 class="text-3xl font-bold mb-4" style="color: var(--accent-color)">Crear Tu Habitación</h2>
+     <p class="text-lg" style="color: var(--text-color)">Diseña tu propia habitación con peligros personalizados</p>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8"><!-- Room Designer -->
+     <div class="themed-bg rounded-2xl p-6 shadow-lg">
+      <h3 class="text-xl font-bold mb-4">Diseñador de Habitación</h3>
+      <div class="mb-4"><label class="block text-sm font-semibold mb-2">Nombre de la Habitación:</label> <input type="text" id="custom-room-name" placeholder="Mi Habitación Especial" class="w-full p-3 border-2 border-gray-300 rounded-lg themed-bg">
+      </div>
+      <div class="mb-4"><label class="block text-sm font-semibold mb-2">Tema:</label> <select id="custom-room-theme" class="w-full p-3 border-2 border-gray-300 rounded-lg themed-bg"> <option value="home">🏠 Casa</option> <option value="school">🏫 Escuela</option> <option value="park">🌳 Parque</option> <option value="beach">🏖️ Playa</option> <option value="winter">❄️ Invierno</option> </select>
+      </div>
+      <div class="mb-4"><label class="block text-sm font-semibold mb-2">Dificultad:</label> <select id="custom-room-difficulty" class="w-full p-3 border-2 border-gray-300 rounded-lg themed-bg"> <option value="easy">🟢 Fácil (2:00 min)</option> <option value="medium">🟡 Medio (1:30 min)</option> <option value="hard">🔴 Difícil (1:00 min)</option> </select>
+      </div>
+      <div class="mb-6"><label class="block text-sm font-semibold mb-2">Elementos Disponibles:</label>
+       <div id="elements-palette" class="grid grid-cols-4 gap-2"><!-- Dynamic elements based on theme -->
+       </div>
+      </div><button onclick="saveCustomRoom()" class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-bold"> 💾 Guardar Habitación </button>
+     </div><!-- Room Preview -->
+     <div class="themed-bg rounded-2xl p-6 shadow-lg">
+      <h3 class="text-xl font-bold mb-4">Vista Previa</h3>
+      <div id="custom-room-preview" class="bg-gray-100 rounded-xl p-4 min-h-64 border-2 border-dashed border-gray-300">
+       <div class="text-center text-gray-500 mt-20">
+        <div class="room-emoji mb-2">
+         🎨
+        </div>
+        <p>Arrastra elementos aquí para crear tu habitación</p>
+       </div>
+      </div>
+      <div class="mt-4 text-center"><button onclick="testCustomRoom()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg"> 🧪 Probar Habitación </button>
+      </div>
+     </div>
+    </div><!-- Saved Custom Rooms -->
+    <div class="mt-8">
+     <h3 class="text-xl font-bold mb-4">Tus Habitaciones Guardadas</h3>
+     <div id="saved-rooms-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"><!-- Dynamic saved rooms -->
+     </div>
+    </div>
+   </div>
+  </div><!-- Parent Dashboard -->
+  <div id="parent-dashboard-screen" class="min-h-full p-4 hidden">
+   <div class="max-w-6xl mx-auto"><button onclick="showMainMenu()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg mb-6"> ← Menú </button>
+    <div class="text-center mb-8">
+     <div class="section-emoji mb-4">
+      👨‍👩‍👧‍👦
+     </div>
+     <h2 class="text-3xl font-bold mb-4" style="color: var(--accent-color)">Panel de Padres</h2>
+     <p class="text-lg" style="color: var(--text-color)">Monitorea el progreso y aprendizaje de tu hijo</p>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8"><!-- Progress Overview -->
+     <div class="lg:col-span-2 themed-bg rounded-2xl p-6 shadow-lg">
+      <h3 class="text-xl font-bold mb-4">Resumen de Progreso</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+       <div class="text-center p-4 bg-blue-50 rounded-lg">
+        <div class="text-2xl font-bold text-blue-600" id="parent-total-score">
+         0
+        </div>
+        <div class="text-sm">
+         Puntos Totales
+        </div>
+       </div>
+       <div class="text-center p-4 bg-green-50 rounded-lg">
+        <div class="text-2xl font-bold text-green-600" id="parent-rooms-completed">
+         0
+        </div>
+        <div class="text-sm">
+         Habitaciones
+        </div>
+       </div>
+       <div class="text-center p-4 bg-purple-50 rounded-lg">
+        <div class="text-2xl font-bold text-purple-600" id="parent-play-time">
+         0h
+        </div>
+        <div class="text-sm">
+         Tiempo Jugado
+        </div>
+       </div>
+       <div class="text-center p-4 bg-orange-50 rounded-lg">
+        <div class="text-2xl font-bold text-orange-600" id="parent-learning-level">
+         Principiante
+        </div>
+        <div class="text-sm">
+         Nivel
+        </div>
+       </div>
+      </div><!-- Learning Progress Chart -->
+      <div class="mb-6">
+       <h4 class="font-semibold mb-3">Progreso por Área de Seguridad</h4>
+       <div class="space-y-3">
+        <div class="flex items-center justify-between"><span class="text-sm">🍳 Seguridad en Cocina</span>
+         <div class="flex-1 mx-3 bg-gray-200 rounded-full h-2">
+          <div class="bg-yellow-500 h-2 rounded-full" style="width: 85%"></div>
+         </div><span class="text-sm font-semibold">85%</span>
+        </div>
+        <div class="flex items-center justify-between"><span class="text-sm">🛁 Seguridad en Baño</span>
+         <div class="flex-1 mx-3 bg-gray-200 rounded-full h-2">
+          <div class="bg-purple-500 h-2 rounded-full" style="width: 70%"></div>
+         </div><span class="text-sm font-semibold">70%</span>
+        </div>
+        <div class="flex items-center justify-between"><span class="text-sm">🌱 Seguridad Exterior</span>
+         <div class="flex-1 mx-3 bg-gray-200 rounded-full h-2">
+          <div class="bg-green-500 h-2 rounded-full" style="width: 60%"></div>
+         </div><span class="text-sm font-semibold">60%</span>
+        </div>
+       </div>
+      </div>
+     </div><!-- Weekly Report -->
+     <div class="themed-bg rounded-2xl p-6 shadow-lg">
+      <h3 class="text-xl font-bold mb-4">Reporte Semanal</h3>
+      <div class="space-y-4">
+       <div class="p-3 bg-green-50 rounded-lg">
+        <div class="font-semibold text-green-800">
+         ✅ Fortalezas
+        </div>
+        <div class="text-sm text-green-600">
+         Excelente identificación de peligros eléctricos
+        </div>
+       </div>
+       <div class="p-3 bg-yellow-50 rounded-lg">
+        <div class="font-semibold text-yellow-800">
+         ⚠️ Áreas a Mejorar
+        </div>
+        <div class="text-sm text-yellow-600">
+         Practicar más seguridad química
+        </div>
+       </div>
+       <div class="p-3 bg-blue-50 rounded-lg">
+        <div class="font-semibold text-blue-800">
+         💡 Recomendación
+        </div>
+        <div class="text-sm text-blue-600">
+         Revisar guía de primeros auxilios juntos
+        </div>
+       </div>
+      </div><button onclick="generateDetailedReport()" class="w-full mt-4 themed-accent text-white py-2 rounded-lg"> 📊 Reporte Detallado </button>
+     </div>
+    </div><!-- Safety Reminders -->
+    <div class="themed-bg rounded-2xl p-6 shadow-lg mb-8">
+     <h3 class="text-xl font-bold mb-4">Recordatorios de Seguridad Familiares</h3>
+     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="p-4 bg-red-50 rounded-lg text-center">
+       <div class="medium-emoji mb-2">
+        🔥
+       </div>
+       <div class="font-semibold">
+        Detectores de Humo
+       </div>
+       <div class="text-sm text-gray-600">
+        Revisar baterías mensualmente
+       </div><button class="mt-2 bg-red-500 text-white px-3 py-1 rounded text-xs">Marcar Hecho</button>
+      </div>
+      <div class="p-4 bg-blue-50 rounded-lg text-center">
+       <div class="medium-emoji mb-2">
+        🚪
+       </div>
+       <div class="font-semibold">
+        Plan de Evacuación
+       </div>
+       <div class="text-sm text-gray-600">
+        Practicar cada 3 meses
+       </div><button class="mt-2 themed-accent text-white px-3 py-1 rounded text-xs">Programar</button>
+      </div>
+      <div class="p-4 bg-green-50 rounded-lg text-center">
+       <div class="medium-emoji mb-2">
+        🧴
+       </div>
+       <div class="font-semibold">
+        Productos Químicos
+       </div>
+       <div class="text-sm text-gray-600">
+        Verificar almacenamiento seguro
+       </div><button class="mt-2 bg-green-500 text-white px-3 py-1 rounded text-xs">Revisar</button>
+      </div>
+      <div class="p-4 bg-purple-50 rounded-lg text-center">
+       <div class="medium-emoji mb-2">
+        📞
+       </div>
+       <div class="font-semibold">
+        Números de Emergencia
+       </div>
+       <div class="text-sm text-gray-600">
+        Actualizar lista familiar
+       </div><button class="mt-2 bg-purple-500 text-white px-3 py-1 rounded text-xs">Actualizar</button>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div><!-- Game Screen -->
+  <div id="game-screen" class="min-h-full p-4 hidden"><!-- Player Info -->
+   <div class="themed-bg rounded-2xl shadow-lg p-4 mb-6 max-w-4xl mx-auto">
+    <div class="flex items-center justify-between">
+     <div class="flex items-center space-x-4">
+      <div id="player-avatar" class="room-emoji">
+       👦
+      </div>
+      <div>
+       <div class="text-xl font-bold" style="color: var(--text-color)" id="player-display-name">
+        Jugador
+       </div>
+       <div class="text-sm" style="color: var(--text-color)">
+        Puntos: <span id="player-score">0</span>
+       </div>
+      </div>
+     </div>
+     <div class="text-right">
+      <div class="text-lg font-bold" style="color: var(--success-color)">
+       Habitaciones: <span id="completed-rooms">0</span>/6
+      </div><button onclick="showMainMenu()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg mt-2"> 🏠 Menú </button>
+     </div>
+    </div><!-- Player Collections -->
+    <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4"><!-- Stickers Collection -->
+     <div class="themed-bg rounded-xl p-3 border-2 border-gray-200">
+      <h4 class="font-semibold mb-2">🎨 Stickers Coleccionados</h4>
+      <div id="player-stickers" class="flex flex-wrap gap-1"><!-- Dynamic stickers -->
+      </div>
+     </div><!-- Medals Collection -->
+     <div class="themed-bg rounded-xl p-3 border-2 border-gray-200">
+      <h4 class="font-semibold mb-2">🏆 Medallas Ganadas</h4>
+      <div id="player-medals" class="flex flex-wrap gap-1"><!-- Dynamic medals -->
+      </div>
+     </div><!-- Achievements -->
+     <div class="themed-bg rounded-xl p-3 border-2 border-gray-200">
+      <h4 class="font-semibold mb-2">⭐ Logros Recientes</h4>
+      <div id="recent-achievements" class="text-sm space-y-1"><!-- Dynamic achievements -->
+      </div>
+     </div>
+    </div>
+   </div><!-- Room Selection -->
+   <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-8">
+     <div class="section-emoji mb-4">
+      👨‍🚒
+     </div>
+     <h2 class="text-2xl font-bold mb-2" style="color: var(--text-color)">¡Hola! Soy <span id="guide-name">Capitán Seguridad</span></h2>
+     <p style="color: var(--text-color)">Elige una habitación para encontrar los peligros ocultos</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Kitchen -->
+     <div class="room-card bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl shadow-xl p-6 text-white cursor-pointer" onclick="startRoom('kitchen')">
+      <div class="flex items-center justify-between mb-4">
+       <div class="room-emoji">
+        🍳
+       </div>
+       <div id="kitchen-status" class="medium-emoji">
+        ⏳
+       </div>
+      </div>
+      <h3 class="text-2xl font-bold mb-2">Cocina</h3>
+      <div class="text-xs bg-green-500 px-2 py-1 rounded-full mb-2">
+       FÁCIL • 2:00 min
+      </div>
+      <p class="text-sm opacity-90 mb-4">5 peligros + peligros ocultos</p>
+      <div class="bg-white bg-opacity-20 rounded-lg p-2">
+       <div class="text-xs">
+        ⚠️ Incluye trampas que restan puntos
+       </div>
+      </div>
+     </div><!-- Living Room -->
+     <div class="room-card bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl shadow-xl p-6 text-white cursor-pointer" onclick="startRoom('living')">
+      <div class="flex items-center justify-between mb-4">
+       <div class="room-emoji">
+        🛋️
+       </div>
+       <div id="living-status" class="medium-emoji">
+        ⏳
+       </div>
+      </div>
+      <h3 class="text-2xl font-bold mb-2">Sala</h3>
+      <div class="text-xs bg-yellow-500 px-2 py-1 rounded-full mb-2">
+       MEDIO • 1:30 min
+      </div>
+      <p class="text-sm opacity-90 mb-4">5 peligros + peligros ocultos</p>
+      <div class="bg-white bg-opacity-20 rounded-lg p-2">
+       <div class="text-xs">
+        🔍 Algunos peligros están ocultos
+       </div>
+      </div>
+     </div><!-- Bathroom -->
+     <div class="room-card bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl shadow-xl p-6 text-white cursor-pointer" onclick="startRoom('bathroom')">
+      <div class="flex items-center justify-between mb-4">
+       <div class="room-emoji">
+        🛁
+       </div>
+       <div id="bathroom-status" class="medium-emoji">
+        ⏳
+       </div>
+      </div>
+      <h3 class="text-2xl font-bold mb-2">Baño</h3>
+      <div class="text-xs bg-red-500 px-2 py-1 rounded-full mb-2">
+       DIFÍCIL • 1:15 min
+      </div>
+      <p class="text-sm opacity-90 mb-4">6 peligros + peligros ocultos</p>
+      <div class="bg-white bg-opacity-20 rounded-lg p-2">
+       <div class="text-xs">
+        💀 Peligros muy serios
+       </div>
+      </div>
+     </div><!-- Garden -->
+     <div class="room-card bg-gradient-to-br from-green-400 to-teal-500 rounded-2xl shadow-xl p-6 text-white cursor-pointer" onclick="startRoom('garden')">
+      <div class="flex items-center justify-between mb-4">
+       <div class="room-emoji">
+        🌱
+       </div>
+       <div id="garden-status" class="medium-emoji">
+        ⏳
+       </div>
+      </div>
+      <h3 class="text-2xl font-bold mb-2">Jardín</h3>
+      <div class="text-xs bg-yellow-500 px-2 py-1 rounded-full mb-2">
+       MEDIO • 1:40 min
+      </div>
+      <p class="text-sm opacity-90 mb-4">5 peligros + peligros ocultos</p>
+      <div class="bg-white bg-opacity-20 rounded-lg p-2">
+       <div class="text-xs">
+        🐝 Peligros de la naturaleza
+       </div>
+      </div>
+     </div><!-- Garage -->
+     <div class="room-card bg-gradient-to-br from-gray-400 to-gray-600 rounded-2xl shadow-xl p-6 text-white cursor-pointer" onclick="startRoom('garage')">
+      <div class="flex items-center justify-between mb-4">
+       <div class="room-emoji">
+        🏠
+       </div>
+       <div id="garage-status" class="medium-emoji">
+        ⏳
+       </div>
+      </div>
+      <h3 class="text-2xl font-bold mb-2">Garaje</h3>
+      <div class="text-xs bg-red-600 px-2 py-1 rounded-full mb-2">
+       MUY DIFÍCIL • 1:00 min
+      </div>
+      <p class="text-sm opacity-90 mb-4">6 peligros + peligros ocultos</p>
+      <div class="bg-white bg-opacity-20 rounded-lg p-2">
+       <div class="text-xs">
+        🔥 Peligros químicos y mecánicos
+       </div>
+      </div>
+     </div><!-- Basement -->
+     <div class="room-card bg-gradient-to-br from-indigo-500 to-purple-700 rounded-2xl shadow-xl p-6 text-white cursor-pointer" onclick="startRoom('basement')">
+      <div class="flex items-center justify-between mb-4">
+       <div class="room-emoji">
+        🏠
+       </div>
+       <div id="basement-status" class="medium-emoji">
+        ⏳
+       </div>
+      </div>
+      <h3 class="text-2xl font-bold mb-2">Sótano</h3>
+      <div class="text-xs bg-black px-2 py-1 rounded-full mb-2">
+       EXTREMO • 0:45 min
+      </div>
+      <p class="text-sm opacity-90 mb-4">6 peligros + peligros ocultos</p>
+      <div class="bg-white bg-opacity-20 rounded-lg p-2">
+       <div class="text-xs">
+        ☠️ Solo para expertos
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div><!-- Room Game Screen -->
+  <div id="room-screen" class="min-h-full p-4 hidden">
+   <div class="max-w-4xl mx-auto"><!-- Room Header -->
+    <div class="themed-bg rounded-2xl shadow-lg p-4 mb-6">
+     <div class="flex justify-between items-center mb-4"><button onclick="showGame()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"> ← Volver </button>
+      <div class="text-center">
+       <div class="text-2xl font-bold" style="color: var(--accent-color)" id="current-room-name">
+        Habitación
+       </div>
+       <div class="text-sm" style="color: var(--text-color)" id="room-difficulty">
+        Encuentra todos los peligros
+       </div>
+      </div>
+      <div class="text-center">
+       <div class="text-2xl font-bold" id="timer-display">
+        2:00
+       </div>
+       <div class="text-sm" style="color: var(--text-color)">
+        Tiempo restante
+       </div>
+      </div>
+     </div>
+     <div class="grid grid-cols-4 gap-4 text-center">
+      <div>
+       <div class="text-lg font-bold" style="color: var(--success-color)" id="found-count">
+        0
+       </div>
+       <div class="text-xs" style="color: var(--text-color)">
+        Encontrados
+       </div>
+      </div>
+      <div>
+       <div class="text-lg font-bold" style="color: var(--accent-color)" id="room-score">
+        0
+       </div>
+       <div class="text-xs" style="color: var(--text-color)">
+        Puntos
+       </div>
+      </div>
+      <div>
+       <div class="text-lg font-bold" style="color: var(--warning-color)" id="streak-count">
+        0
+       </div>
+       <div class="text-xs" style="color: var(--text-color)">
+        Racha
+       </div>
+      </div>
+      <div>
+       <div class="text-lg font-bold" style="color: var(--danger-color)" id="wrong-count">
+        0
+       </div>
+       <div class="text-xs" style="color: var(--text-color)">
+        Errores
+       </div>
+      </div>
+     </div><!-- Progress Bar -->
+     <div class="mt-4">
+      <div class="bg-gray-200 rounded-full h-3">
+       <div id="progress-bar" class="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+      </div>
+     </div><!-- Action Buttons -->
+     <div class="flex justify-center space-x-2 mt-4 flex-wrap"><button id="hint-btn" onclick="useHint()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg disabled:opacity-50"> 💡 Pista (3) </button> <button onclick="revealHidden()" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg"> 🔍 Revelar Ocultos </button> <button id="repeat-instructions" onclick="repeatInstructions()" class="themed-accent text-white px-4 py-2 rounded-lg"> 🎤 Repetir </button> <button id="stop-speech" onclick="stopSpeech()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"> 🔇 Silencio </button>
+     </div>
+    </div><!-- Room Content -->
+    <div id="room-content" class="themed-bg rounded-2xl shadow-xl p-6"><!-- Dynamic room content will be loaded here -->
+    </div><!-- Feedback -->
+    <div id="feedback-area" class="mt-6 text-center">
+     <div id="feedback-message" class="text-lg font-semibold mb-4"></div>
+     <div id="explanation-box" class="themed-bg border-l-4 border-blue-400 p-4 rounded-lg max-w-2xl mx-auto hidden">
+      <p id="explanation-text" style="color: var(--text-color)"></p>
+     </div>
+    </div>
+   </div>
+  </div><!-- Completion Screen -->
+  <div id="completion-screen" class="min-h-full flex items-center justify-center p-4 hidden">
+   <div class="themed-bg rounded-3xl shadow-2xl p-8 max-w-2xl w-full text-center">
+    <div class="section-emoji mb-4">
+     🏆
+    </div>
+    <h2 class="text-4xl font-bold text-yellow-600 mb-4">¡Felicitaciones!</h2>
+    <p class="text-xl mb-6" style="color: var(--text-color)">Has completado todas las habitaciones y te has convertido en un experto en seguridad doméstica</p>
+    <div class="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-2xl p-6 mb-6">
+     <div class="text-2xl font-bold mb-2" style="color: var(--text-color)">
+      Tu Puntuación Final
+     </div>
+     <div class="text-4xl font-bold text-yellow-600" id="final-score">
+      0
+     </div>
+     <div class="text-sm mt-2" style="color: var(--text-color)">
+      ¡Excelente trabajo!
+     </div>
+    </div><!-- Certificate Generation -->
+    <div class="themed-bg rounded-2xl p-6 mb-6 border-2 border-yellow-400">
+     <div class="room-emoji mb-2">
+      📜
+     </div>
+     <h3 class="text-xl font-bold mb-2">¡Certificado de Seguridad!</h3>
+     <p class="text-sm mb-4" style="color: var(--text-color)">Has ganado tu certificado oficial de Experto en Seguridad Doméstica</p><button onclick="generateCertificate()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg"> 🖨️ Generar Certificado </button>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+     <div class="themed-bg p-4 rounded-lg border-2 border-gray-200">
+      <div class="medium-emoji mb-2">
+       🏠
+      </div>
+      <div class="font-semibold">
+       Habitaciones
+      </div>
+      <div class="text-lg font-bold" style="color: var(--accent-color)">
+       6/6
+      </div>
+     </div>
+     <div class="themed-bg p-4 rounded-lg border-2 border-gray-200">
+      <div class="medium-emoji mb-2">
+       ⚠️
+      </div>
+      <div class="font-semibold">
+       Peligros Encontrados
+      </div>
+      <div class="text-lg font-bold" style="color: var(--success-color)" id="total-dangers">
+       30
+      </div>
+     </div>
+     <div class="themed-bg p-4 rounded-lg border-2 border-gray-200">
+      <div class="medium-emoji mb-2">
+       🔥
+      </div>
+      <div class="font-semibold">
+       Mejor Racha
+      </div>
+      <div class="text-lg font-bold" style="color: var(--warning-color)" id="best-streak">
+       0
+      </div>
+     </div>
+     <div class="themed-bg p-4 rounded-lg border-2 border-gray-200">
+      <div class="medium-emoji mb-2">
+       🏆
+      </div>
+      <div class="font-semibold">
+       Rango Final
+      </div>
+      <div class="text-lg font-bold text-yellow-600" id="final-rank">
+       Experto
+      </div>
+     </div>
+    </div>
+    <div class="themed-bg rounded-2xl p-6 mb-6 border-2 border-gray-200">
+     <h3 class="text-xl font-bold mb-4">🏆 Logros Desbloqueados</h3>
+     <div class="grid grid-cols-2 md:grid-cols-4 gap-2" id="achievements-list"><!-- Dynamic achievements will be added here -->
+     </div>
+    </div>
+    <div class="space-x-4"><button onclick="showMainMenu()" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-4 rounded-xl text-xl font-bold hover:from-blue-600 hover:to-purple-600 transition-all transform hover:scale-105"> 🏠 Menú Principal </button> <button onclick="shareResults()" class="bg-gradient-to-r from-green-500 to-teal-500 text-white px-6 py-4 rounded-xl font-bold hover:from-green-600 hover:to-teal-600 transition-all"> 📤 Compartir Logros </button>
+    </div>
+   </div>
+  </div>
+  <script>
+        // Default configuration
+        const defaultConfig = {
+            app_title: "Centro de Seguridad Doméstica",
+            welcome_message: "¡Aprende seguridad doméstica jugando!",
+            guide_name: "Capitán Seguridad",
+            emergency_number: "911"
+        };
+
+        // Enhanced game state
+        let gameState = {
+            player: {
+                name: '',
+                avatar: '👦',
+                score: 0,
+                completedRooms: [],
+                streak: 0,
+                bestTime: 0,
+                unlockedAvatars: ['👦', '👧'],
+                collectedStickers: [],
+                earnedMedals: [],
+                customRooms: [],
+                themePreference: 'default',
+                totalPlayTime: 0,
+                sessionsPlayed: 0
+            },
+            currentRoom: '',
+            foundDangers: new Set(),
+            roomScore: 0,
+            timeLeft: 0,
+            gameTimer: null,
+            startTime: 0,
+            hintsUsed: 0,
+            wrongClicks: 0,
+            voiceEnabled: true,
+            speechRate: 0.9,
+            speechVolume: 0.8,
+            gameMode: 'classic', // classic, multiplayer, daily, survival
+            multiplayerPlayers: [],
+            currentPlayerIndex: 0,
+            dailyChallengeCompleted: false,
+            survivalModeRecord: 0,
+            survivalLives: 3,
+            survivalLevel: 1
+        };
+
+        // Stickers and medals system
+        const availableStickers = [
+            { id: 'fire_safety', emoji: '🔥', name: 'Seguridad contra Incendios', condition: 'complete_kitchen' },
+            { id: 'water_safety', emoji: '💧', name: 'Seguridad con Agua', condition: 'complete_bathroom' },
+            { id: 'electrical_safety', emoji: '⚡', name: 'Seguridad Eléctrica', condition: 'complete_living' },
+            { id: 'outdoor_safety', emoji: '🌳', name: 'Seguridad Exterior', condition: 'complete_garden' },
+            { id: 'chemical_safety', emoji: '🧪', name: 'Seguridad Química', condition: 'complete_garage' },
+            { id: 'emergency_expert', emoji: '🚨', name: 'Experto en Emergencias', condition: 'complete_basement' },
+            { id: 'perfect_score', emoji: '⭐', name: 'Puntuación Perfecta', condition: 'no_mistakes' },
+            { id: 'speed_demon', emoji: '⚡', name: 'Demonio de Velocidad', condition: 'fast_completion' },
+            { id: 'daily_champion', emoji: '📅', name: 'Campeón Diario', condition: 'daily_challenge' },
+            { id: 'survival_master', emoji: '💀', name: 'Maestro de Supervivencia', condition: 'survival_mode' }
+        ];
+
+        const availableMedals = [
+            { id: 'bronze_explorer', emoji: '🥉', name: 'Explorador de Bronce', condition: 'complete_3_rooms' },
+            { id: 'silver_detective', emoji: '🥈', name: 'Detective de Plata', condition: 'complete_5_rooms' },
+            { id: 'gold_expert', emoji: '🥇', name: 'Experto de Oro', condition: 'complete_all_rooms' },
+            { id: 'platinum_master', emoji: '🏆', name: 'Maestro de Platino', condition: 'high_score' },
+            { id: 'diamond_legend', emoji: '💎', name: 'Leyenda de Diamante', condition: 'perfect_game' }
+        ];
+
+        // Enhanced room definitions
+        const rooms = {
+            kitchen: {
+                name: 'Cocina',
+                emoji: '🍳',
+                color: 'yellow',
+                difficulty: 'Fácil',
+                timeLimit: 120,
+                dangers: [
+                    { id: 'stove', emoji: '🔥', name: 'Estufa Caliente', explanation: '¡Cuidado! La estufa está muy caliente. Nunca toques las ollas o sartenes cuando están cocinando. Siempre pide ayuda a un adulto.', points: 100, hidden: false },
+                    { id: 'knife', emoji: '🔪', name: 'Cuchillos Filosos', explanation: 'Los cuchillos son muy peligrosos y filosos. Solo los adultos deben usarlos. Mantente alejado de ellos.', points: 150, hidden: false },
+                    { id: 'chemicals', emoji: '🧴', name: 'Productos de Limpieza', explanation: 'Los productos de limpieza son tóxicos y pueden hacerte daño. Nunca los toques ni los bebas. Siempre deben estar fuera de tu alcance.', points: 120, hidden: false },
+                    { id: 'gas', emoji: '⛽', name: 'Fuga de Gas', explanation: 'Si hueles gas, nunca enciendas luces o fósforos. Sal inmediatamente y pide ayuda a un adulto.', points: 200, hidden: true },
+                    { id: 'oil', emoji: '🛢️', name: 'Aceite Caliente', explanation: 'El aceite caliente puede salpicar y quemarte gravemente. Mantente alejado cuando un adulto esté cocinando.', points: 180, hidden: true }
+                ],
+                safeItems: [
+                    { emoji: '🍎', name: 'Frutas' },
+                    { emoji: '🥛', name: 'Leche' },
+                    { emoji: '🍞', name: 'Pan' }
+                ],
+                traps: [
+                    { emoji: '🧊', name: 'Hielo', penalty: 50 },
+                    { emoji: '🥄', name: 'Cuchara', penalty: 30 }
+                ]
+            },
+            living: {
+                name: 'Sala',
+                emoji: '🛋️',
+                color: 'blue',
+                difficulty: 'Medio',
+                timeLimit: 90,
+                dangers: [
+                    { id: 'outlet', emoji: '🔌', name: 'Enchufe Descubierto', explanation: 'Los enchufes tienen electricidad peligrosa. Nunca metas los dedos o objetos en ellos. Pueden darte una descarga eléctrica.', points: 120, hidden: false },
+                    { id: 'stairs', emoji: '🪜', name: 'Escaleras Sin Protección', explanation: 'Las escaleras pueden ser peligrosas. Siempre usa el pasamanos, no corras y ten mucho cuidado al subir o bajar.', points: 100, hidden: false },
+                    { id: 'cable', emoji: '🔌', name: 'Cable Suelto', explanation: 'Los cables sueltos pueden causar tropiezos o descargas eléctricas. Nunca los toques si están dañados.', points: 150, hidden: true },
+                    { id: 'candle', emoji: '🕯️', name: 'Vela Encendida', explanation: 'Las velas pueden causar incendios. Nunca las dejes solas y mantenlas lejos de cortinas y papeles.', points: 180, hidden: true },
+                    { id: 'glass', emoji: '🪟', name: 'Vidrio Roto', explanation: 'Los vidrios rotos pueden cortarte. Si ves uno, no lo toques y pide ayuda a un adulto inmediatamente.', points: 200, hidden: true }
+                ],
+                safeItems: [
+                    { emoji: '📚', name: 'Libros' },
+                    { emoji: '🧸', name: 'Juguetes' },
+                    { emoji: '🛋️', name: 'Sofá' },
+                    { emoji: '📺', name: 'Televisión' }
+                ],
+                traps: [
+                    { emoji: '🎮', name: 'Videojuego', penalty: 40 },
+                    { emoji: '🖼️', name: 'Cuadro', penalty: 20 }
+                ]
+            },
+            bathroom: {
+                name: 'Baño',
+                emoji: '🛁',
+                color: 'purple',
+                difficulty: 'Difícil',
+                timeLimit: 75,
+                dangers: [
+                    { id: 'medicine', emoji: '💊', name: 'Medicinas', explanation: 'Las medicinas solo las pueden dar los adultos. Nunca las tomes por tu cuenta, pueden ser muy peligrosas si no las necesitas.', points: 130, hidden: false },
+                    { id: 'hotwater', emoji: '🚿', name: 'Agua Muy Caliente', explanation: 'El agua muy caliente puede quemarte la piel. Siempre pide ayuda a un adulto para regular la temperatura del agua.', points: 110, hidden: false },
+                    { id: 'wetfloor', emoji: '💧', name: 'Piso Mojado', explanation: 'El piso mojado es muy resbaloso y puedes caerte. Ten mucho cuidado y sécalo cuando puedas.', points: 100, hidden: false },
+                    { id: 'razor', emoji: '🪒', name: 'Navaja de Afeitar', explanation: 'Las navajas son extremadamente filosas. Solo los adultos deben usarlas. Nunca las toques.', points: 250, hidden: true },
+                    { id: 'electrical', emoji: '💡', name: 'Aparato Eléctrico Mojado', explanation: 'Nunca toques aparatos eléctricos con las manos mojadas. Puedes recibir una descarga mortal.', points: 300, hidden: true },
+                    { id: 'chemicals2', emoji: '🧽', name: 'Productos Químicos', explanation: 'Algunos productos de limpieza del baño son muy fuertes y tóxicos. Pueden quemar tu piel.', points: 200, hidden: true }
+                ],
+                safeItems: [
+                    { emoji: '🧼', name: 'Jabón' },
+                    { emoji: '🪥', name: 'Cepillo de Dientes' }
+                ],
+                traps: [
+                    { emoji: '🧻', name: 'Papel Higiénico', penalty: 60 },
+                    { emoji: '🪞', name: 'Espejo', penalty: 30 }
+                ]
+            },
+            garden: {
+                name: 'Jardín',
+                emoji: '🌱',
+                color: 'green',
+                difficulty: 'Medio',
+                timeLimit: 100,
+                dangers: [
+                    { id: 'toxicplant', emoji: '🌿', name: 'Plantas Tóxicas', explanation: 'Algunas plantas pueden ser venenosas si las tocas o comes. Nunca toques plantas desconocidas sin preguntar a un adulto.', points: 140, hidden: false },
+                    { id: 'tools', emoji: '✂️', name: 'Herramientas de Jardín', explanation: 'Las herramientas de jardín como tijeras y palas son filosas y peligrosas. Solo los adultos deben usarlas.', points: 120, hidden: false },
+                    { id: 'pesticide', emoji: '☠️', name: 'Pesticidas', explanation: 'Los pesticidas son venenos para insectos pero también pueden hacerte daño. Nunca los toques.', points: 220, hidden: true },
+                    { id: 'beehive', emoji: '🐝', name: 'Colmena de Abejas', explanation: 'Las abejas pueden picarte si las molestas. Mantente alejado de las colmenas y no hagas movimientos bruscos.', points: 180, hidden: true },
+                    { id: 'thorns', emoji: '🌹', name: 'Espinas Afiladas', explanation: 'Las plantas con espinas pueden lastimarte. Ten cuidado al caminar cerca de rosales y cactus.', points: 160, hidden: true }
+                ],
+                safeItems: [
+                    { emoji: '🌸', name: 'Flores Bonitas' },
+                    { emoji: '🦋', name: 'Mariposas' },
+                    { emoji: '🌳', name: 'Árbol' },
+                    { emoji: '🌻', name: 'Girasol' }
+                ],
+                traps: [
+                    { emoji: '🍄', name: 'Hongo', penalty: 80 },
+                    { emoji: '🪨', name: 'Piedra', penalty: 25 }
+                ]
+            },
+            garage: {
+                name: 'Garaje',
+                emoji: '🏠',
+                color: 'gray',
+                difficulty: 'Muy Difícil',
+                timeLimit: 60,
+                dangers: [
+                    { id: 'car', emoji: '🚗', name: 'Auto en Marcha', explanation: 'Nunca juegues cerca de autos encendidos. Pueden moverse inesperadamente y lastimarte.', points: 150, hidden: false },
+                    { id: 'powertools', emoji: '🔨', name: 'Herramientas Eléctricas', explanation: 'Las herramientas eléctricas son muy peligrosas. Solo los adultos capacitados deben usarlas.', points: 200, hidden: false },
+                    { id: 'gasoline', emoji: '⛽', name: 'Gasolina', explanation: 'La gasolina es inflamable y tóxica. Nunca la toques y mantente alejado de los vapores.', points: 250, hidden: true },
+                    { id: 'ladder', emoji: '🪜', name: 'Escalera Inestable', explanation: 'Las escaleras mal colocadas pueden caerse. Siempre pide ayuda a un adulto para usarlas.', points: 180, hidden: true },
+                    { id: 'battery', emoji: '🔋', name: 'Batería de Auto', explanation: 'Las baterías contienen ácido peligroso. Nunca las toques, pueden quemarte o explotar.', points: 300, hidden: true },
+                    { id: 'exhaust', emoji: '💨', name: 'Gases de Escape', explanation: 'Los gases del auto son venenosos. Nunca respires cerca del tubo de escape.', points: 280, hidden: true }
+                ],
+                safeItems: [
+                    { emoji: '🚲', name: 'Bicicleta' },
+                    { emoji: '⚽', name: 'Pelota' }
+                ],
+                traps: [
+                    { emoji: '📦', name: 'Caja', penalty: 40 },
+                    { emoji: '🧽', name: 'Esponja', penalty: 20 }
+                ]
+            },
+            basement: {
+                name: 'Sótano',
+                emoji: '🏠',
+                color: 'indigo',
+                difficulty: 'Extremo',
+                timeLimit: 45,
+                dangers: [
+                    { id: 'electrical', emoji: '⚡', name: 'Panel Eléctrico', explanation: 'El panel eléctrico tiene alta voltaje. Solo electricistas pueden tocarlo. Puede ser mortal.', points: 300, hidden: false },
+                    { id: 'mold', emoji: '🦠', name: 'Moho Tóxico', explanation: 'El moho puede causar problemas respiratorios graves. Si ves moho, sal inmediatamente.', points: 250, hidden: true },
+                    { id: 'asbestos', emoji: '🧱', name: 'Asbesto', explanation: 'El asbesto es un material muy peligroso que puede causar cáncer. Nunca lo toques.', points: 400, hidden: true },
+                    { id: 'flood', emoji: '🌊', name: 'Inundación', explanation: 'El agua en el sótano puede tener electricidad. Nunca entres si hay agua.', points: 350, hidden: true },
+                    { id: 'gas2', emoji: '☠️', name: 'Gas Tóxico', explanation: 'Algunos sótanos pueden tener gases peligrosos. Si hueles algo raro, sal inmediatamente.', points: 380, hidden: true },
+                    { id: 'structure', emoji: '🏗️', name: 'Estructura Dañada', explanation: 'Si ves grietas en las paredes o techo, puede colapsar. Sal inmediatamente.', points: 320, hidden: true }
+                ],
+                safeItems: [
+                    { emoji: '📚', name: 'Libros Viejos' }
+                ],
+                traps: [
+                    { emoji: '🕷️', name: 'Araña', penalty: 100 },
+                    { emoji: '📦', name: 'Caja Vieja', penalty: 50 }
+                ]
+            }
+        };
+
+        // Daily challenge room generator
+        function generateDailyChallenge() {
+            const today = new Date().toDateString();
+            const seed = today.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+            
+            // Use seed to generate consistent daily room
+            const themes = ['mystery_house', 'abandoned_school', 'old_factory', 'haunted_mansion', 'space_station'];
+            const theme = themes[seed % themes.length];
+            
+            return {
+                name: 'Habitación Misteriosa',
+                emoji: '❓',
+                color: 'purple',
+                difficulty: 'Especial',
+                timeLimit: 60,
+                theme: theme,
+                dangers: generateRandomDangers(seed),
+                safeItems: generateRandomSafeItems(seed),
+                traps: generateRandomTraps(seed)
+            };
+        }
+
+        function generateRandomDangers(seed) {
+            // Generate consistent random dangers based on seed
+            const dangerPool = [
+                { id: 'mystery1', emoji: '⚠️', name: 'Peligro Oculto', explanation: 'Un peligro misterioso que solo aparece en el desafío diario.', points: 300, hidden: true },
+                { id: 'mystery2', emoji: '☢️', name: 'Sustancia Desconocida', explanation: 'Una sustancia peligrosa que debes evitar a toda costa.', points: 250, hidden: false },
+                { id: 'mystery3', emoji: '🌪️', name: 'Zona Inestable', explanation: 'Un área que puede colapsar en cualquier momento.', points: 280, hidden: true },
+                { id: 'mystery4', emoji: '🔥', name: 'Fuego Oculto', explanation: 'Un incendio que se está propagando silenciosamente.', points: 320, hidden: true },
+                { id: 'mystery5', emoji: '⚡', name: 'Descarga Eléctrica', explanation: 'Cables expuestos con alta tensión.', points: 290, hidden: false }
+            ];
+            
+            return dangerPool.slice(0, 5);
+        }
+
+        function generateRandomSafeItems(seed) {
+            const safePool = [
+                { emoji: '📱', name: 'Teléfono de Emergencia' },
+                { emoji: '🧯', name: 'Extintor' },
+                { emoji: '🚪', name: 'Salida de Emergencia' }
+            ];
+            return safePool;
+        }
+
+        function generateRandomTraps(seed) {
+            const trapPool = [
+                { emoji: '🪤', name: 'Trampa Oculta', penalty: 100 },
+                { emoji: '🕳️', name: 'Agujero', penalty: 80 }
+            ];
+            return trapPool;
+        }
+
+        // Survival mode functions
+        function showSurvivalMode() {
+            hideAllScreens();
+            document.getElementById('survival-mode-screen').classList.remove('hidden');
+            document.getElementById('survival-record').textContent = gameState.survivalModeRecord;
+        }
+
+        function startSurvivalMode() {
+            gameState.gameMode = 'survival';
+            gameState.survivalLives = 3;
+            gameState.survivalLevel = 1;
+            
+            speak("¡Bienvenido al modo supervivencia! Tienes 3 vidas. Cada error te quitará una vida. El tiempo se reduce cada nivel. ¡Sobrevive el mayor tiempo posible!", true);
+            
+            generateSurvivalRoom();
+        }
+
+        function generateSurvivalRoom() {
+            const level = gameState.survivalLevel;
+            const timeLimit = Math.max(30, 120 - (level * 10)); // Reduce time each level
+            const dangerCount = Math.min(8, 3 + level); // Increase dangers each level
+            
+            const survivalRoom = {
+                name: `Supervivencia Nivel ${level}`,
+                emoji: '💀',
+                color: 'red',
+                difficulty: `Nivel ${level}`,
+                timeLimit: timeLimit,
+                dangers: generateSurvivalDangers(level, dangerCount),
+                safeItems: [{ emoji: '🧯', name: 'Extintor' }],
+                traps: generateSurvivalTraps(level)
+            };
+            
+            rooms['survival'] = survivalRoom;
+            gameState.currentRoom = 'survival';
+            
+            startRoom('survival');
+        }
+
+        function generateSurvivalDangers(level, count) {
+            const dangerPool = [
+                { id: 'fire', emoji: '🔥', name: 'Fuego', explanation: 'Fuego peligroso que se extiende rápidamente.', points: 100 + (level * 20), hidden: false },
+                { id: 'electric', emoji: '⚡', name: 'Electricidad', explanation: 'Cables eléctricos expuestos.', points: 120 + (level * 20), hidden: Math.random() > 0.5 },
+                { id: 'toxic', emoji: '☠️', name: 'Tóxico', explanation: 'Sustancia tóxica mortal.', points: 150 + (level * 20), hidden: Math.random() > 0.3 },
+                { id: 'explosion', emoji: '💥', name: 'Explosivo', explanation: 'Material explosivo inestable.', points: 200 + (level * 20), hidden: Math.random() > 0.4 },
+                { id: 'radiation', emoji: '☢️', name: 'Radiación', explanation: 'Zona con radiación peligrosa.', points: 180 + (level * 20), hidden: Math.random() > 0.6 },
+                { id: 'gas', emoji: '💨', name: 'Gas Venenoso', explanation: 'Gas tóxico en el aire.', points: 160 + (level * 20), hidden: Math.random() > 0.5 },
+                { id: 'sharp', emoji: '🗡️', name: 'Objeto Filoso', explanation: 'Objetos cortantes peligrosos.', points: 140 + (level * 20), hidden: false },
+                { id: 'unstable', emoji: '🌪️', name: 'Estructura Inestable', explanation: 'Estructura que puede colapsar.', points: 170 + (level * 20), hidden: Math.random() > 0.7 }
+            ];
+            
+            // Shuffle and take required count
+            const shuffled = dangerPool.sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, count).map((danger, index) => ({
+                ...danger,
+                id: `survival_${level}_${index}`
+            }));
+        }
+
+        function generateSurvivalTraps(level) {
+            const trapCount = Math.min(3, Math.floor(level / 2) + 1);
+            const traps = [];
+            
+            for (let i = 0; i < trapCount; i++) {
+                traps.push({
+                    emoji: ['🪤', '🕳️', '💣'][i % 3],
+                    name: ['Trampa', 'Agujero', 'Bomba'][i % 3],
+                    penalty: 50 + (level * 10)
+                });
+            }
+            
+            return traps;
+        }
+
+        // Data SDK handler
+        const dataHandler = {
+            onDataChanged(data) {
+                console.log('Data updated:', data);
+                updateProgressSummary();
+            }
+        };
+
+        // Voice synthesis functions
+        function speak(text, priority = false) {
+            if (!gameState.voiceEnabled || !window.speechSynthesis) return;
+            
+            if (priority) {
+                window.speechSynthesis.cancel();
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'es-ES';
+            utterance.rate = gameState.speechRate;
+            utterance.volume = gameState.speechVolume;
+            utterance.pitch = 1.1;
+            
+            const voices = window.speechSynthesis.getVoices();
+            const spanishVoice = voices.find(voice => 
+                voice.lang.includes('es') && (voice.name.includes('female') || voice.name.includes('mujer'))
+            ) || voices.find(voice => voice.lang.includes('es'));
+            
+            if (spanishVoice) {
+                utterance.voice = spanishVoice;
+            }
+            
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function speakWelcome() {
+            setTimeout(() => {
+                speak("¡Hola! Bienvenido al Centro de Seguridad Doméstica Completo. Aquí tienes muchas formas divertidas de aprender sobre seguridad. Puedes jugar solo, con amigos, aceptar desafíos diarios, probar el modo supervivencia, o crear tus propias habitaciones. ¡Elige tu avatar favorito y comencemos!", true);
+            }, 500);
+        }
+
+        function speakFirstAid() {
+            speak("Te voy a enseñar primeros auxilios básicos. Para cortadas pequeñas: lava con agua limpia, presiona con gasa y cubre con una curita. Para golpes: aplica hielo envuelto en tela por 10 a 15 minutos. Para quemaduras leves: usa agua fría por 10 a 20 minutos, pero nunca uses hielo. Recuerda siempre pedir ayuda a un adulto.", true);
+        }
+
+        function speakEmergencyNumbers() {
+            const emergencyNumber = document.getElementById('emergency-number').textContent;
+            speak(`Los números de emergencia son muy importantes. Para emergencias de policía, bomberos o ambulancia, llama al ${emergencyNumber}. Para casos de envenenamiento, llama al 1-800-222-1222. Siempre mantén estos números a la mano y pide ayuda a un adulto para hacer las llamadas.`, true);
+        }
+
+        // Theme management
+        function changeTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            gameState.player.themePreference = theme;
+            savePlayerData();
+            
+            // Update theme selector
+            document.getElementById('theme-select').value = theme;
+            
+            showNotification(`Tema cambiado a ${getThemeName(theme)}`, '🎨');
+        }
+
+        function getThemeName(theme) {
+            const names = {
+                'default': 'Normal',
+                'dark': 'Nocturno',
+                'pastel': 'Pastel',
+                'high-contrast': 'Alto Contraste'
+            };
+            return names[theme] || 'Normal';
+        }
+
+        // Notification system
+        function showNotification(message, emoji = '✅', duration = 3000) {
+            const container = document.getElementById('notifications-container');
+            const notification = document.createElement('div');
+            notification.className = 'floating-notification themed-bg border-2 border-gray-300 rounded-lg p-4 shadow-lg';
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <span class="medium-emoji">${emoji}</span>
+                    <span class="font-semibold">${message}</span>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.5s ease reverse';
+                setTimeout(() => {
+                    container.removeChild(notification);
+                }, 500);
+            }, duration);
+        }
+
+        // Stickers and medals system
+        function checkAndAwardStickers(condition, roomId = null) {
+            const newStickers = [];
+            
+            availableStickers.forEach(sticker => {
+                if (gameState.player.collectedStickers.includes(sticker.id)) return;
+                
+                let shouldAward = false;
+                
+                switch (sticker.condition) {
+                    case 'complete_kitchen':
+                        shouldAward = roomId === 'kitchen';
+                        break;
+                    case 'complete_bathroom':
+                        shouldAward = roomId === 'bathroom';
+                        break;
+                    case 'complete_living':
+                        shouldAward = roomId === 'living';
+                        break;
+                    case 'complete_garden':
+                        shouldAward = roomId === 'garden';
+                        break;
+                    case 'complete_garage':
+                        shouldAward = roomId === 'garage';
+                        break;
+                    case 'complete_basement':
+                        shouldAward = roomId === 'basement';
+                        break;
+                    case 'no_mistakes':
+                        shouldAward = condition === 'no_mistakes' && gameState.wrongClicks === 0;
+                        break;
+                    case 'fast_completion':
+                        shouldAward = condition === 'fast_completion';
+                        break;
+                    case 'daily_challenge':
+                        shouldAward = condition === 'daily_challenge';
+                        break;
+                    case 'survival_mode':
+                        shouldAward = condition === 'survival_mode';
+                        break;
+                }
+                
+                if (shouldAward) {
+                    gameState.player.collectedStickers.push(sticker.id);
+                    newStickers.push(sticker);
+                }
+            });
+            
+            newStickers.forEach(sticker => {
+                showStickerNotification(sticker);
+            });
+            
+            return newStickers;
+        }
+
+        function checkAndAwardMedals() {
+            const newMedals = [];
+            
+            availableMedals.forEach(medal => {
+                if (gameState.player.earnedMedals.includes(medal.id)) return;
+                
+                let shouldAward = false;
+                
+                switch (medal.condition) {
+                    case 'complete_3_rooms':
+                        shouldAward = gameState.player.completedRooms.length >= 3;
+                        break;
+                    case 'complete_5_rooms':
+                        shouldAward = gameState.player.completedRooms.length >= 5;
+                        break;
+                    case 'complete_all_rooms':
+                        shouldAward = gameState.player.completedRooms.length >= 6;
+                        break;
+                    case 'high_score':
+                        shouldAward = gameState.player.score >= 10000;
+                        break;
+                    case 'perfect_game':
+                        shouldAward = gameState.player.completedRooms.length >= 6 && gameState.player.score >= 15000;
+                        break;
+                }
+                
+                if (shouldAward) {
+                    gameState.player.earnedMedals.push(medal.id);
+                    newMedals.push(medal);
+                }
+            });
+            
+            newMedals.forEach(medal => {
+                showMedalNotification(medal);
+            });
+            
+            return newMedals;
+        }
+
+        function showStickerNotification(sticker) {
+            showNotification(`¡Nuevo sticker desbloqueado: ${sticker.name}!`, sticker.emoji, 5000);
+            
+            // Add sticker animation to player display
+            const stickerEl = document.createElement('div');
+            stickerEl.className = 'sticker small-emoji';
+            stickerEl.textContent = sticker.emoji;
+            stickerEl.title = sticker.name;
+            
+            const playerStickers = document.getElementById('player-stickers');
+            if (playerStickers) {
+                playerStickers.appendChild(stickerEl);
+            }
+        }
+
+        function showMedalNotification(medal) {
+            showNotification(`¡Nueva medalla ganada: ${medal.name}!`, medal.emoji, 5000);
+            
+            // Add medal animation to player display
+            const medalEl = document.createElement('div');
+            medalEl.className = 'medal small-emoji';
+            medalEl.textContent = medal.emoji;
+            medalEl.title = medal.name;
+            
+            const playerMedals = document.getElementById('player-medals');
+            if (playerMedals) {
+                playerMedals.appendChild(medalEl);
+            }
+        }
+
+        // Avatar unlocking system
+        function checkAndUnlockAvatars() {
+            const newAvatars = [];
+            
+            // Unlock superhero avatars after completing 3 rooms
+            if (gameState.player.completedRooms.length >= 3) {
+                if (!gameState.player.unlockedAvatars.includes('🦸‍♂️')) {
+                    gameState.player.unlockedAvatars.push('🦸‍♂️');
+                    newAvatars.push('🦸‍♂️');
+                }
+                if (!gameState.player.unlockedAvatars.includes('🦸‍♀️')) {
+                    gameState.player.unlockedAvatars.push('🦸‍♀️');
+                    newAvatars.push('🦸‍♀️');
+                }
+            }
+            
+            // Unlock professional avatars after completing all rooms
+            if (gameState.player.completedRooms.length >= 6) {
+                const professionalAvatars = ['👨‍🚒', '👩‍⚕️', '👮‍♂️', '👩‍🚒'];
+                professionalAvatars.forEach(avatar => {
+                    if (!gameState.player.unlockedAvatars.includes(avatar)) {
+                        gameState.player.unlockedAvatars.push(avatar);
+                        newAvatars.push(avatar);
+                    }
+                });
+            }
+            
+            newAvatars.forEach(avatar => {
+                showNotification(`¡Nuevo avatar desbloqueado!`, avatar, 4000);
+            });
+            
+            updateAvatarGrid();
+            return newAvatars;
+        }
+
+        function updateAvatarGrid() {
+            const avatarGrid = document.getElementById('avatar-grid');
+            if (!avatarGrid) return;
+            
+            const avatarOptions = avatarGrid.querySelectorAll('.avatar-option');
+            avatarOptions.forEach(option => {
+                const avatar = option.dataset.avatar;
+                if (gameState.player.unlockedAvatars.includes(avatar)) {
+                    option.dataset.unlocked = 'true';
+                    option.classList.remove('opacity-50', 'bg-gray-200');
+                    option.classList.add('themed-bg');
+                    option.querySelector('.text-red-500')?.remove();
+                }
+            });
+        }
+
+        // Seasonal safety tips
+        function updateSeasonalTips() {
+            const now = new Date();
+            const month = now.getMonth();
+            const seasonalContent = document.getElementById('seasonal-content');
+            
+            let season, tips;
+            
+            if (month >= 2 && month <= 4) { // Spring
+                season = 'Primavera';
+                tips = [
+                    '🌸 Cuidado con las alergias al polen',
+                    '🌧️ Usa paraguas en días lluviosos',
+                    '🐝 Mantente alejado de abejas y avispas',
+                    '🌱 No toques plantas desconocidas'
+                ];
+            } else if (month >= 5 && month <= 7) { // Summer
+                season = 'Verano';
+                tips = [
+                    '☀️ Usa protector solar siempre',
+                    '🏊‍♂️ Nunca nades sin supervisión adulta',
+                    '💧 Mantente hidratado bebiendo agua',
+                    '🔥 Cuidado con las parrillas y fogatas'
+                ];
+            } else if (month >= 8 && month <= 10) { // Fall
+                season = 'Otoño';
+                tips = [
+                    '🍂 Ten cuidado con hojas mojadas resbalosas',
+                    '🎃 Usa ropa reflectante en Halloween',
+                    '🔥 Revisa detectores de humo',
+                    '🌬️ Asegura objetos que puedan volar con el viento'
+                ];
+            } else { // Winter
+                season = 'Invierno';
+                tips = [
+                    '❄️ Cuidado con el hielo en el suelo',
+                    '🔥 Nunca dejes calentadores sin supervisión',
+                    '🧥 Abrígate bien antes de salir',
+                    '⛄ No toques metal con las manos mojadas en el frío'
+                ];
+            }
+            
+            seasonalContent.innerHTML = `
+                <h4 class="font-semibold mb-3">Consejos para ${season}</h4>
+                <div class="space-y-2">
+                    ${tips.map(tip => `<div class="flex items-start space-x-2 text-sm"><span>${tip}</span></div>`).join('')}
+                </div>
+            `;
+            
+            speak(`Aquí tienes consejos de seguridad para ${season}: ${tips.join('. ')}`);
+        }
+
+        // Certificate generation
+        function generateCertificate() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 800;
+            canvas.height = 600;
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            ctx.fillStyle = '#f0f9ff';
+            ctx.fillRect(0, 0, 800, 600);
+            
+            // Border
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(20, 20, 760, 560);
+            
+            // Title
+            ctx.fillStyle = '#1e40af';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('CERTIFICADO DE SEGURIDAD', 400, 100);
+            
+            // Subtitle
+            ctx.font = '24px Arial';
+            ctx.fillText('Centro de Seguridad Doméstica', 400, 140);
+            
+            // Player name
+            ctx.fillStyle = '#059669';
+            ctx.font = 'bold 36px Arial';
+            ctx.fillText(`${gameState.player.name}`, 400, 220);
+            
+            // Achievement text
+            ctx.fillStyle = '#374151';
+            ctx.font = '20px Arial';
+            ctx.fillText('Ha completado exitosamente el entrenamiento', 400, 280);
+            ctx.fillText('en Seguridad Doméstica y ha demostrado', 400, 310);
+            ctx.fillText('excelencia en la identificación de peligros', 400, 340);
+            
+            // Score
+            ctx.fillStyle = '#dc2626';
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText(`Puntuación Final: ${gameState.player.score}`, 400, 400);
+            
+            // Date
+            ctx.fillStyle = '#6b7280';
+            ctx.font = '16px Arial';
+            const today = new Date().toLocaleDateString('es-ES');
+            ctx.fillText(`Fecha: ${today}`, 400, 480);
+            
+            // Signature
+            ctx.fillText('Capitán Seguridad - Instructor Certificado', 400, 520);
+            
+            // Convert to image and download
+            const link = document.createElement('a');
+            link.download = `certificado-seguridad-${gameState.player.name}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+            
+            showNotification('¡Certificado generado y descargado!', '📜', 4000);
+            speak('¡Felicitaciones! Tu certificado de seguridad ha sido generado. Puedes imprimirlo y mostrárselo a tus padres.');
+        }
+
+        // Share results
+        function shareResults() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Centro de Seguridad Doméstica',
+                    text: `¡Completé el Centro de Seguridad Doméstica con ${gameState.player.score} puntos! 🏆`,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const text = `¡Completé el Centro de Seguridad Doméstica con ${gameState.player.score} puntos! 🏆`;
+                navigator.clipboard.writeText(text).then(() => {
+                    showNotification('¡Resultados copiados al portapapeles!', '📋');
+                });
+            }
+        }
+
+        // Initialize app
+        function initApp() {
+            setupEventListeners();
+            loadPlayerData();
+            updateProgressSummary();
+            updateSeasonalTips();
+            
+            // Initialize Data SDK
+            if (window.dataSdk) {
+                window.dataSdk.init(dataHandler).catch(error => {
+                    console.log("Data SDK not available");
+                });
+            }
+        }
+
+        function setupEventListeners() {
+            // Theme selector
+            document.getElementById('theme-select').addEventListener('change', function() {
+                changeTheme(this.value);
+            });
+
+            // Avatar selection
+            document.querySelectorAll('.avatar-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    if (this.dataset.unlocked === 'false') {
+                        showNotification('Este avatar aún no está desbloqueado', '🔒');
+                        return;
+                    }
+                    
+                    document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected', 'border-blue-500'));
+                    this.classList.add('selected', 'border-blue-500');
+                    gameState.player.avatar = this.dataset.avatar;
+                    checkStartButton();
+                    
+                    const avatarNames = {
+                        '👦': 'niño',
+                        '👧': 'niña', 
+                        '🦸‍♂️': 'superhéroe',
+                        '🦸‍♀️': 'superheroína',
+                        '👨‍🚒': 'bombero',
+                        '👩‍⚕️': 'doctora',
+                        '👮‍♂️': 'policía',
+                        '👩‍🚒': 'bombera'
+                    };
+                    speak(`Has elegido el avatar de ${avatarNames[this.dataset.avatar]}`);
+                });
+            });
+
+            // Player name input
+            document.getElementById('player-name').addEventListener('input', function() {
+                gameState.player.name = this.value.trim();
+                checkStartButton();
+            });
+
+            // Start game button
+            document.getElementById('start-game').addEventListener('click', function() {
+                if (gameState.player.name && gameState.player.avatar) {
+                    speak(`¡Perfecto ${gameState.player.name}! Vamos a comenzar tu aventura de seguridad. Ahora elige una habitación para explorar.`, true);
+                    showGame();
+                }
+            });
+
+            // Voice controls
+            document.getElementById('voice-toggle').addEventListener('click', toggleVoice);
+            document.getElementById('speak-welcome').addEventListener('click', speakWelcome);
+            document.getElementById('speech-rate').addEventListener('input', function() {
+                gameState.speechRate = parseFloat(this.value);
+            });
+            document.getElementById('speech-volume').addEventListener('input', function() {
+                gameState.speechVolume = parseFloat(this.value);
+            });
+        }
+
+        function toggleVoice() {
+            gameState.voiceEnabled = !gameState.voiceEnabled;
+            const button = document.getElementById('voice-toggle');
+            const span = button.querySelector('span:last-child');
+            
+            if (gameState.voiceEnabled) {
+                span.textContent = 'Voz: ON';
+                button.classList.remove('bg-gray-500');
+                button.classList.add('themed-accent');
+                speak("Voz activada");
+            } else {
+                span.textContent = 'Voz: OFF';
+                button.classList.remove('themed-accent');
+                button.classList.add('bg-gray-500');
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        function checkStartButton() {
+            const startBtn = document.getElementById('start-game');
+            if (gameState.player.name && gameState.player.avatar) {
+                startBtn.disabled = false;
+                startBtn.classList.remove('opacity-50');
+            } else {
+                startBtn.disabled = true;
+                startBtn.classList.add('opacity-50');
+            }
+        }
+
+        // Navigation functions
+        function showMainMenu() {
+            hideAllScreens();
+            document.getElementById('main-menu').classList.remove('hidden');
+            updateProgressSummary();
+        }
+
+        function showWelcome() {
+            hideAllScreens();
+            document.getElementById('welcome-screen').classList.remove('hidden');
+            updateAvatarGrid();
+        }
+
+        function showMultiplayer() {
+            hideAllScreens();
+            document.getElementById('multiplayer-screen').classList.remove('hidden');
+        }
+
+        function showDailyChallenge() {
+            hideAllScreens();
+            document.getElementById('daily-challenge-screen').classList.remove('hidden');
+            updateDailyChallengeStatus();
+        }
+
+        function showEducationalContent() {
+            hideAllScreens();
+            document.getElementById('educational-screen').classList.remove('hidden');
+            updateSeasonalTips();
+        }
+
+        function showCustomRooms() {
+            hideAllScreens();
+            document.getElementById('custom-rooms-screen').classList.remove('hidden');
+            updateCustomRoomBuilder();
+        }
+
+        function showParentDashboard() {
+            hideAllScreens();
+            document.getElementById('parent-dashboard-screen').classList.remove('hidden');
+            updateParentDashboard();
+        }
+
+        function showGame() {
+            hideAllScreens();
+            document.getElementById('game-screen').classList.remove('hidden');
+            updatePlayerDisplay();
+            updateRoomStatuses();
+            updatePlayerCollections();
+        }
+
+        function showRoom() {
+            hideAllScreens();
+            document.getElementById('room-screen').classList.remove('hidden');
+        }
+
+        function showCompletion() {
+            hideAllScreens();
+            document.getElementById('completion-screen').classList.remove('hidden');
+            
+            document.getElementById('final-score').textContent = gameState.player.score;
+            document.getElementById('best-streak').textContent = gameState.player.streak;
+            
+            let totalDangers = 0;
+            gameState.player.completedRooms.forEach(roomId => {
+                totalDangers += rooms[roomId].dangers.length;
+            });
+            document.getElementById('total-dangers').textContent = totalDangers;
+            
+            let rank = 'Principiante';
+            if (gameState.player.score >= 10000) rank = 'Maestro de Seguridad';
+            else if (gameState.player.score >= 7500) rank = 'Experto';
+            else if (gameState.player.score >= 5000) rank = 'Avanzado';
+            else if (gameState.player.score >= 2500) rank = 'Intermedio';
+            
+            document.getElementById('final-rank').textContent = rank;
+            
+            const achievementsList = document.getElementById('achievements-list');
+            const achievements = calculateAchievements();
+            
+            achievementsList.innerHTML = '';
+            achievements.forEach(achievement => {
+                const achievementEl = document.createElement('div');
+                achievementEl.className = 'themed-bg p-2 rounded-lg text-center border-2 border-gray-200';
+                achievementEl.innerHTML = `
+                    <div class="small-emoji">${achievement.emoji}</div>
+                    <div class="text-xs font-semibold">${achievement.name}</div>
+                `;
+                achievementsList.appendChild(achievementEl);
+            });
+        }
+
+        function hideAllScreens() {
+            const screens = [
+                'main-menu', 'welcome-screen', 'multiplayer-screen', 'daily-challenge-screen',
+                'educational-screen', 'custom-rooms-screen', 'parent-dashboard-screen',
+                'game-screen', 'room-screen', 'completion-screen', 'survival-mode-screen'
+            ];
+            
+            screens.forEach(screenId => {
+                document.getElementById(screenId).classList.add('hidden');
+            });
+        }
+
+        // Update functions
+        function updateProgressSummary() {
+            document.getElementById('total-score-display').textContent = gameState.player.score;
+            document.getElementById('rooms-completed-display').textContent = gameState.player.completedRooms.length;
+            document.getElementById('stickers-count-display').textContent = gameState.player.collectedStickers.length;
+            document.getElementById('medals-count-display').textContent = gameState.player.earnedMedals.length;
+        }
+
+        function updatePlayerDisplay() {
+            document.getElementById('player-avatar').textContent = gameState.player.avatar;
+            document.getElementById('player-display-name').textContent = gameState.player.name;
+            document.getElementById('player-score').textContent = gameState.player.score;
+            document.getElementById('completed-rooms').textContent = gameState.player.completedRooms.length;
+        }
+
+        function updatePlayerCollections() {
+            // Update stickers
+            const playerStickers = document.getElementById('player-stickers');
+            if (playerStickers) {
+                playerStickers.innerHTML = '';
+                gameState.player.collectedStickers.forEach(stickerId => {
+                    const sticker = availableStickers.find(s => s.id === stickerId);
+                    if (sticker) {
+                        const stickerEl = document.createElement('div');
+                        stickerEl.className = 'small-emoji';
+                        stickerEl.textContent = sticker.emoji;
+                        stickerEl.title = sticker.name;
+                        playerStickers.appendChild(stickerEl);
+                    }
+                });
+            }
+            
+            // Update medals
+            const playerMedals = document.getElementById('player-medals');
+            if (playerMedals) {
+                playerMedals.innerHTML = '';
+                gameState.player.earnedMedals.forEach(medalId => {
+                    const medal = availableMedals.find(m => m.id === medalId);
+                    if (medal) {
+                        const medalEl = document.createElement('div');
+                        medalEl.className = 'small-emoji medal';
+                        medalEl.textContent = medal.emoji;
+                        medalEl.title = medal.name;
+                        playerMedals.appendChild(medalEl);
+                    }
+                });
+            }
+            
+            // Update recent achievements
+            const recentAchievements = document.getElementById('recent-achievements');
+            if (recentAchievements) {
+                recentAchievements.innerHTML = '';
+                const recent = [...gameState.player.collectedStickers.slice(-3), ...gameState.player.earnedMedals.slice(-2)];
+                recent.forEach(id => {
+                    const item = availableStickers.find(s => s.id === id) || availableMedals.find(m => m.id === id);
+                    if (item) {
+                        const itemEl = document.createElement('div');
+                        itemEl.className = 'text-xs';
+                        itemEl.textContent = `${item.emoji} ${item.name}`;
+                        recentAchievements.appendChild(itemEl);
+                    }
+                });
+            }
+        }
+
+        function updateRoomStatuses() {
+            Object.keys(rooms).forEach(roomId => {
+                const statusEl = document.getElementById(roomId + '-status');
+                if (statusEl) {
+                    if (gameState.player.completedRooms.includes(roomId)) {
+                        statusEl.textContent = '✅';
+                    } else {
+                        statusEl.textContent = '⏳';
+                    }
+                }
+            });
+        }
+
+        function updateDailyChallengeStatus() {
+            const today = new Date().toDateString();
+            const statusEl = document.getElementById('daily-status');
+            
+            if (gameState.dailyChallengeCompleted && gameState.lastDailyChallengeDate === today) {
+                statusEl.innerHTML = '<div class="text-green-600 font-semibold">✅ ¡Completado hoy!</div>';
+            } else {
+                statusEl.innerHTML = '<div class="text-blue-600 font-semibold">🎯 ¡Disponible hoy!</div>';
+            }
+        }
+
+        function updateCustomRoomBuilder() {
+            // Update elements palette based on selected theme
+            const theme = document.getElementById('custom-room-theme').value;
+            const palette = document.getElementById('elements-palette');
+            
+            const themeElements = {
+                'home': ['🔥', '🔌', '🔪', '💊', '🧴', '⚡', '🚿', '🌿'],
+                'school': ['📚', '✂️', '🧪', '🔬', '⚡', '🚪', '🪜', '🧯'],
+                'park': ['🌳', '🐝', '🌿', '🪨', '🌹', '☠️', '🕳️', '🦋'],
+                'beach': ['🌊', '☀️', '🦀', '🏖️', '⛵', '🐠', '🏄‍♂️', '🏐'],
+                'winter': ['❄️', '🧊', '🔥', '⛄', '🎿', '🏔️', '🧥', '☃️']
+            };
+            
+            palette.innerHTML = '';
+            themeElements[theme].forEach(emoji => {
+                const element = document.createElement('div');
+                element.className = 'themed-bg border-2 border-gray-300 rounded-lg p-2 text-center cursor-pointer hover:bg-blue-100 transition-all';
+                element.innerHTML = `<div class="medium-emoji">${emoji}</div>`;
+                element.draggable = true;
+                element.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', emoji);
+                });
+                palette.appendChild(element);
+            });
+        }
+
+        function updateParentDashboard() {
+            // Update parent dashboard with player statistics
+            document.getElementById('parent-total-score').textContent = gameState.player.score;
+            document.getElementById('parent-rooms-completed').textContent = `${gameState.player.completedRooms.length}/6`;
+            document.getElementById('parent-play-time').textContent = `${Math.floor(gameState.player.totalPlayTime / 60)}h`;
+            
+            let level = 'Principiante';
+            if (gameState.player.completedRooms.length >= 6) level = 'Experto';
+            else if (gameState.player.completedRooms.length >= 4) level = 'Avanzado';
+            else if (gameState.player.completedRooms.length >= 2) level = 'Intermedio';
+            
+            document.getElementById('parent-learning-level').textContent = level;
+        }
+
+        // Game functions (continuing from previous implementation)
+        function startRoom(roomId) {
+            gameState.currentRoom = roomId;
+            gameState.foundDangers.clear();
+            gameState.roomScore = 0;
+            gameState.wrongClicks = 0;
+            gameState.hintsUsed = 0;
+            gameState.startTime = Date.now();
+            
+            const room = rooms[roomId];
+            gameState.timeLeft = room.timeLimit;
+            
+            document.getElementById('current-room-name').textContent = room.emoji + ' ' + room.name;
+            document.getElementById('room-difficulty').textContent = `Dificultad: ${room.difficulty}`;
+            document.getElementById('found-count').textContent = '0';
+            document.getElementById('room-score').textContent = '0';
+            document.getElementById('streak-count').textContent = '0';
+            document.getElementById('wrong-count').textContent = '0';
+            document.getElementById('hint-btn').textContent = '💡 Pista (3)';
+            
+            startTimer();
+            renderRoom(room);
+            showRoom();
+            
+            setTimeout(() => {
+                speakRoomInstructions(room.name, room.difficulty, room.timeLimit);
+            }, 1000);
+        }
+
+        function startTimer() {
+            if (gameState.gameTimer) {
+                clearInterval(gameState.gameTimer);
+            }
+            
+            gameState.gameTimer = setInterval(() => {
+                gameState.timeLeft--;
+                updateTimerDisplay();
+                
+                if (gameState.timeLeft <= 0) {
+                    clearInterval(gameState.gameTimer);
+                    timeUp();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(gameState.timeLeft / 60);
+            const seconds = gameState.timeLeft % 60;
+            const timerEl = document.getElementById('timer-display');
+            timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (gameState.timeLeft <= 30) {
+                timerEl.style.color = 'var(--danger-color)';
+                
+                if (gameState.timeLeft === 30) {
+                    speakGameFeedback('timeWarning');
+                }
+            } else {
+                timerEl.style.color = 'var(--accent-color)';
+            }
+        }
+
+        function timeUp() {
+            const messageEl = document.getElementById('feedback-message');
+            
+            if (gameState.gameMode === 'survival') {
+                gameState.survivalLives--;
+                
+                if (gameState.survivalLives <= 0) {
+                    // Game over
+                    messageEl.textContent = `💀 ¡Juego Terminado! Llegaste al nivel ${gameState.survivalLevel}`;
+                    messageEl.style.color = 'var(--danger-color)';
+                    
+                    if (gameState.survivalLevel > gameState.survivalModeRecord) {
+                        gameState.survivalModeRecord = gameState.survivalLevel;
+                        showNotification(`¡Nuevo récord de supervivencia: Nivel ${gameState.survivalLevel}!`, '🏆', 5000);
+                        checkAndAwardStickers('survival_mode');
+                    }
+                    
+                    setTimeout(() => {
+                        showMainMenu();
+                    }, 4000);
+                } else {
+                    // Lost a life, continue
+                    messageEl.textContent = `💔 ¡Perdiste una vida! Te quedan ${gameState.survivalLives} vidas`;
+                    messageEl.style.color = 'var(--danger-color)';
+                    
+                    setTimeout(() => {
+                        generateSurvivalRoom();
+                    }, 2000);
+                }
+            } else {
+                messageEl.textContent = '⏰ ¡Se acabó el tiempo! Puntuación final: ' + gameState.roomScore;
+                messageEl.style.color = 'var(--danger-color)';
+                
+                setTimeout(() => {
+                    showGame();
+                }, 3000);
+            }
+        }
+
+        function renderRoom(room) {
+            const roomContent = document.getElementById('room-content');
+            
+            let html = `
+                <div class="themed-bg rounded-2xl p-6 border-2 border-gray-200">
+                    <h3 class="text-3xl font-bold mb-6 text-center" style="color: var(--accent-color)">${room.emoji} ${room.name}</h3>
+            `;
+            
+            // Add survival mode info
+            if (gameState.gameMode === 'survival') {
+                html += `
+                    <div class="bg-red-100 border-2 border-red-300 rounded-xl p-4 mb-6 text-center">
+                        <div class="text-xl font-bold text-red-700 mb-2">Modo Supervivencia - Nivel ${gameState.survivalLevel}</div>
+                        <div class="flex justify-center space-x-4">
+                            <div class="text-red-600">❤️ Vidas: ${gameState.survivalLives}</div>
+                            <div class="text-purple-600">🏆 Récord: Nivel ${gameState.survivalModeRecord}</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            html += `<div class="grid grid-cols-2 md:grid-cols-4 gap-3">`;
+            
+            // Add visible dangers
+            room.dangers.filter(d => !d.hidden).forEach(danger => {
+                html += `
+                    <div class="danger-spot bg-red-100 border-2 border-red-300 p-3 rounded-xl text-center cursor-pointer" 
+                         data-danger="${danger.id}" 
+                         data-explanation="${danger.explanation}"
+                         data-points="${danger.points}">
+                        <div class="danger-emoji mb-1">${danger.emoji}</div>
+                        <div class="text-xs font-semibold text-red-700">${danger.name}</div>
+                        <div class="text-xs text-red-500">+${danger.points}pts</div>
+                    </div>
+                `;
+            });
+            
+            // Add hidden dangers
+            room.dangers.filter(d => d.hidden).forEach(danger => {
+                html += `
+                    <div class="danger-spot hidden-danger bg-gray-100 border-2 border-gray-300 p-3 rounded-xl text-center cursor-pointer opacity-30" 
+                         data-danger="${danger.id}" 
+                         data-explanation="${danger.explanation}"
+                         data-points="${danger.points}"
+                         data-hidden="true">
+                        <div class="danger-emoji mb-1">❓</div>
+                        <div class="text-xs font-semibold text-gray-500">Oculto</div>
+                        <div class="text-xs text-gray-400">+${danger.points}pts</div>
+                    </div>
+                `;
+            });
+            
+            // Add safe items
+            room.safeItems.forEach(item => {
+                html += `
+                    <div class="safe-item bg-green-100 border-2 border-green-300 p-3 rounded-xl text-center cursor-pointer">
+                        <div class="danger-emoji mb-1">${item.emoji}</div>
+                        <div class="text-xs font-semibold text-green-700">${item.name}</div>
+                        <div class="text-xs text-green-500">Seguro</div>
+                    </div>
+                `;
+            });
+            
+            // Add traps
+            room.traps.forEach(trap => {
+                html += `
+                    <div class="trap-item bg-yellow-100 border-2 border-yellow-300 p-3 rounded-xl text-center cursor-pointer"
+                         data-penalty="${trap.penalty}">
+                        <div class="danger-emoji mb-1">${trap.emoji}</div>
+                        <div class="text-xs font-semibold text-yellow-700">${trap.name}</div>
+                        <div class="text-xs text-yellow-500">-${trap.penalty}pts</div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                    <div class="mt-6 text-center">
+                        <p style="color: var(--text-color)">🎯 Encuentra los peligros • ⚠️ Evita las trampas • 🔍 Busca elementos ocultos</p>
+                        <div class="mt-2 text-sm" style="color: var(--text-color)">
+                            Total peligros: ${room.dangers.length} • Visible: ${room.dangers.filter(d => !d.hidden).length} • Ocultos: ${room.dangers.filter(d => d.hidden).length}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            roomContent.innerHTML = html;
+            
+            // Add event listeners
+            document.querySelectorAll('.danger-spot').forEach(spot => {
+                spot.addEventListener('click', handleDangerClick);
+            });
+            
+            document.querySelectorAll('.safe-item').forEach(item => {
+                item.addEventListener('click', handleSafeClick);
+            });
+            
+            document.querySelectorAll('.trap-item').forEach(trap => {
+                trap.addEventListener('click', handleTrapClick);
+            });
+            
+            updateProgress();
+        }
+
+        function handleDangerClick(event) {
+            const dangerSpot = event.currentTarget;
+            const dangerId = dangerSpot.dataset.danger;
+            const explanation = dangerSpot.dataset.explanation;
+            const points = parseInt(dangerSpot.dataset.points);
+
+            if (gameState.foundDangers.has(dangerId)) {
+                return;
+            }
+
+            gameState.foundDangers.add(dangerId);
+            dangerSpot.classList.add('found');
+            
+            gameState.player.streak++;
+            
+            let totalPoints = points;
+            if (gameState.player.streak >= 3) {
+                totalPoints += Math.floor(points * 0.5);
+            }
+            
+            if (gameState.timeLeft > gameState.timeLeft * 0.8) {
+                totalPoints += Math.floor(points * 0.3);
+            }
+            
+            gameState.roomScore += totalPoints;
+            gameState.player.score += totalPoints;
+
+            updateGameStats();
+
+            const messageEl = document.getElementById('feedback-message');
+            const explanationEl = document.getElementById('explanation-box');
+            const explanationText = document.getElementById('explanation-text');
+            
+            let bonusText = '';
+            const hasBonus = gameState.player.streak >= 3 || gameState.timeLeft > gameState.timeLeft * 0.8;
+            if (gameState.player.streak >= 3) bonusText += ' • Racha!';
+            if (gameState.timeLeft > gameState.timeLeft * 0.8) bonusText += ' • Rápido!';
+            
+            messageEl.textContent = `¡Excelente! (+${totalPoints} puntos${bonusText})`;
+            messageEl.style.color = 'var(--success-color)';
+            messageEl.classList.add('celebration');
+            
+            explanationText.textContent = explanation;
+            explanationEl.classList.remove('hidden');
+            
+            const room = rooms[gameState.currentRoom];
+            const dangerData = room.dangers.find(d => d.id === dangerId);
+            if (dangerData) {
+                speakDangerExplanation(dangerData.name, explanation, totalPoints, hasBonus);
+            }
+
+            if (gameState.foundDangers.size >= room.dangers.length) {
+                setTimeout(() => {
+                    completeRoom();
+                }, 2000);
+            }
+
+            setTimeout(() => {
+                messageEl.classList.remove('celebration');
+            }, 1000);
+        }
+
+        function handleSafeClick(event) {
+            const messageEl = document.getElementById('feedback-message');
+            messageEl.textContent = '✅ ¡Correcto! Este elemento es seguro.';
+            messageEl.style.color = 'var(--success-color)';
+            
+            speakGameFeedback('safe');
+            
+            setTimeout(() => {
+                messageEl.textContent = '';
+            }, 2000);
+        }
+
+        function handleTrapClick(event) {
+            const trapItem = event.currentTarget;
+            const penalty = parseInt(trapItem.dataset.penalty);
+            
+            gameState.roomScore = Math.max(0, gameState.roomScore - penalty);
+            gameState.player.score = Math.max(0, gameState.player.score - penalty);
+            gameState.wrongClicks++;
+            gameState.player.streak = 0;
+            
+            // Survival mode: lose a life on trap
+            if (gameState.gameMode === 'survival') {
+                gameState.survivalLives--;
+                
+                if (gameState.survivalLives <= 0) {
+                    clearInterval(gameState.gameTimer);
+                    timeUp();
+                    return;
+                }
+            }
+            
+            trapItem.classList.add('bg-red-200', 'border-red-500');
+            trapItem.style.animation = 'shake 0.5s ease-in-out';
+            
+            updateGameStats();
+            
+            const messageEl = document.getElementById('feedback-message');
+            let message = `❌ ¡Trampa! (-${penalty} puntos)`;
+            if (gameState.gameMode === 'survival') {
+                message += ` • Vidas restantes: ${gameState.survivalLives}`;
+            }
+            messageEl.textContent = message;
+            messageEl.style.color = 'var(--danger-color)';
+            
+            speakGameFeedback('trap');
+            
+            setTimeout(() => {
+                messageEl.textContent = '';
+            }, 2000);
+        }
+
+        function updateGameStats() {
+            document.getElementById('found-count').textContent = gameState.foundDangers.size;
+            document.getElementById('room-score').textContent = gameState.roomScore;
+            document.getElementById('streak-count').textContent = gameState.player.streak;
+            document.getElementById('wrong-count').textContent = gameState.wrongClicks;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const room = rooms[gameState.currentRoom];
+            if (room) {
+                const progress = (gameState.foundDangers.size / room.dangers.length) * 100;
+                document.getElementById('progress-bar').style.width = progress + '%';
+            }
+        }
+
+        function useHint() {
+            if (gameState.hintsUsed >= 3) return;
+            
+            gameState.hintsUsed++;
+            const hintsLeft = 3 - gameState.hintsUsed;
+            document.getElementById('hint-btn').textContent = `💡 Pista (${hintsLeft})`;
+            
+            if (hintsLeft === 0) {
+                document.getElementById('hint-btn').disabled = true;
+                document.getElementById('hint-btn').classList.add('opacity-50');
+            }
+            
+            const room = rooms[gameState.currentRoom];
+            const unfoundDangers = room.dangers.filter(d => !gameState.foundDangers.has(d.id));
+            
+            if (unfoundDangers.length > 0) {
+                const randomDanger = unfoundDangers[Math.floor(Math.random() * unfoundDangers.length)];
+                const dangerEl = document.querySelector(`[data-danger="${randomDanger.id}"]`);
+                
+                if (dangerEl) {
+                    dangerEl.style.animation = 'pulse 2s ease-in-out 3';
+                    dangerEl.style.boxShadow = '0 0 20px #fbbf24';
+                    
+                    setTimeout(() => {
+                        dangerEl.style.animation = '';
+                        dangerEl.style.boxShadow = '';
+                    }, 6000);
+                }
+            }
+            
+            const messageEl = document.getElementById('feedback-message');
+            messageEl.textContent = '💡 ¡Pista activada! Mira el elemento que brilla.';
+            messageEl.style.color = 'var(--warning-color)';
+            
+            speakGameFeedback('hint');
+            
+            setTimeout(() => {
+                messageEl.textContent = '';
+            }, 3000);
+        }
+
+        function revealHidden() {
+            document.querySelectorAll('.hidden-danger').forEach(danger => {
+                const room = rooms[gameState.currentRoom];
+                const dangerData = room.dangers.find(d => d.id === danger.dataset.danger);
+                
+                danger.classList.remove('opacity-30', 'bg-gray-100', 'border-gray-300');
+                danger.classList.add('bg-purple-100', 'border-purple-300');
+                danger.querySelector('.danger-emoji').textContent = dangerData.emoji;
+                danger.querySelector('.text-xs.font-semibold').textContent = dangerData.name;
+                danger.querySelector('.text-xs.font-semibold').classList.remove('text-gray-500');
+                danger.querySelector('.text-xs.font-semibold').classList.add('text-purple-700');
+            });
+            
+            const messageEl = document.getElementById('feedback-message');
+            messageEl.textContent = '🔍 ¡Peligros ocultos revelados por 10 segundos!';
+            messageEl.style.color = 'var(--warning-color)';
+            
+            speakGameFeedback('reveal');
+            
+            setTimeout(() => {
+                document.querySelectorAll('.hidden-danger').forEach(danger => {
+                    if (!gameState.foundDangers.has(danger.dataset.danger)) {
+                        danger.classList.add('opacity-30', 'bg-gray-100', 'border-gray-300');
+                        danger.classList.remove('bg-purple-100', 'border-purple-300');
+                        danger.querySelector('.danger-emoji').textContent = '❓';
+                        danger.querySelector('.text-xs.font-semibold').textContent = 'Oculto';
+                        danger.querySelector('.text-xs.font-semibold').classList.add('text-gray-500');
+                        danger.querySelector('.text-xs.font-semibold').classList.remove('text-purple-700');
+                    }
+                });
+                messageEl.textContent = '';
+            }, 10000);
+        }
+
+        function repeatInstructions() {
+            if (gameState.currentRoom) {
+                const room = rooms[gameState.currentRoom];
+                speakRoomInstructions(room.name, room.difficulty, gameState.timeLeft);
+            }
+        }
+
+        function stopSpeech() {
+            window.speechSynthesis.cancel();
+        }
+
+        function speakRoomInstructions(roomName, difficulty, timeLimit) {
+            const minutes = Math.floor(timeLimit / 60);
+            const seconds = timeLimit % 60;
+            let timeText = '';
+            if (minutes > 0) {
+                timeText = `${minutes} minuto${minutes > 1 ? 's' : ''}`;
+                if (seconds > 0) timeText += ` y ${seconds} segundos`;
+            } else {
+                timeText = `${seconds} segundos`;
+            }
+            
+            let message = `¡Perfecto! Ahora estás en ${roomName}. Esta habitación tiene dificultad ${difficulty}. Tienes ${timeText} para encontrar todos los peligros.`;
+            
+            if (gameState.gameMode === 'survival') {
+                message += ` Estás en el modo supervivencia nivel ${gameState.survivalLevel}. Tienes ${gameState.survivalLives} vidas restantes.`;
+            }
+            
+            message += " Busca los elementos rojos que son peligrosos y evita tocar las trampas amarillas. ¡Buena suerte!";
+            
+            speak(message, true);
+        }
+
+        function speakDangerExplanation(dangerName, explanation, points, hasBonus) {
+            let message = `¡Muy bien! Encontraste: ${dangerName}. ${explanation}`;
+            if (hasBonus) {
+                message += " ¡Excelente trabajo! Ganaste puntos extra por tu buena racha.";
+            }
+            message += ` Ganaste ${points} puntos.`;
+            speak(message, true);
+        }
+
+        function speakGameFeedback(type, message) {
+            switch(type) {
+                case 'safe':
+                    speak("¡Correcto! Ese elemento es completamente seguro. Buen trabajo.");
+                    break;
+                case 'trap':
+                    let trapMessage = "¡Ups! Esa era una trampa. Ten más cuidado y busca solo los elementos peligrosos de color rojo.";
+                    if (gameState.gameMode === 'survival') {
+                        trapMessage += ` Te quedan ${gameState.survivalLives} vidas.`;
+                    }
+                    speak(trapMessage);
+                    break;
+                case 'hint':
+                    speak("Te estoy dando una pista. Mira el elemento que está brillando, ahí hay un peligro escondido.");
+                    break;
+                case 'reveal':
+                    speak("¡Mira! Ahora puedes ver todos los peligros ocultos por unos segundos. ¡Encuéntralos rápido!");
+                    break;
+                case 'timeWarning':
+                    speak("¡Atención! Te quedan solo 30 segundos. ¡Date prisa!");
+                    break;
+                case 'completion':
+                    speak(`¡Fantástico! Completaste la habitación. ${message} ¡Eres un verdadero experto en seguridad!`);
+                    break;
+            }
+        }
+
+        async function completeRoom() {
+            if (gameState.gameTimer) {
+                clearInterval(gameState.gameTimer);
+            }
+            
+            // Handle survival mode completion
+            if (gameState.gameMode === 'survival') {
+                gameState.survivalLevel++;
+                
+                const messageEl = document.getElementById('feedback-message');
+                messageEl.textContent = `🎉 ¡Nivel ${gameState.survivalLevel - 1} completado! Avanzando al nivel ${gameState.survivalLevel}`;
+                messageEl.style.color = 'var(--success-color)';
+                
+                speak(`¡Excelente! Completaste el nivel ${gameState.survivalLevel - 1}. Ahora avanzas al nivel ${gameState.survivalLevel} con mayor dificultad.`, true);
+                
+                setTimeout(() => {
+                    generateSurvivalRoom();
+                }, 3000);
+                
+                return;
+            }
+            
+            // Regular room completion
+            if (!gameState.player.completedRooms.includes(gameState.currentRoom)) {
+                gameState.player.completedRooms.push(gameState.currentRoom);
+            }
+            
+            let bonusPoints = 200;
+            const timeBonus = Math.floor(gameState.timeLeft * 2);
+            bonusPoints += timeBonus;
+            
+            if (gameState.wrongClicks === 0) {
+                bonusPoints += 300;
+            }
+            
+            const hintPenalty = gameState.hintsUsed * 50;
+            bonusPoints = Math.max(100, bonusPoints - hintPenalty);
+            
+            gameState.player.score += bonusPoints;
+            
+            // Award stickers and medals
+            checkAndAwardStickers('room_complete', gameState.currentRoom);
+            if (gameState.wrongClicks === 0) {
+                checkAndAwardStickers('no_mistakes');
+            }
+            if (gameState.timeLeft > 30) {
+                checkAndAwardStickers('fast_completion');
+            }
+            checkAndAwardMedals();
+            checkAndUnlockAvatars();
+            
+            const completionTime = Date.now() - gameState.startTime;
+            const minutes = Math.floor(completionTime / 60000);
+            const seconds = Math.floor((completionTime % 60000) / 1000);
+            
+            await savePlayerData();
+            
+            const messageEl = document.getElementById('feedback-message');
+            let completionText = `🎉 ¡Habitación completada! +${bonusPoints} puntos`;
+            if (timeBonus > 0) completionText += ` • Tiempo: +${timeBonus}`;
+            if (gameState.wrongClicks === 0) completionText += ` • ¡Perfecto!`;
+            if (gameState.hintsUsed > 0) completionText += ` • Pistas: -${hintPenalty}`;
+            
+            messageEl.textContent = completionText;
+            messageEl.style.color = 'var(--success-color)';
+            messageEl.classList.add('celebration');
+            
+            let spokenMessage = `Ganaste ${bonusPoints} puntos extra por completar la habitación.`;
+            if (timeBonus > 0) spokenMessage += ` Obtuviste ${timeBonus} puntos adicionales por ser rápido.`;
+            if (gameState.wrongClicks === 0) spokenMessage += " ¡Increíble! No cometiste ningún error.";
+            speakGameFeedback('completion', spokenMessage);
+            
+            const explanationEl = document.getElementById('explanation-box');
+            const explanationText = document.getElementById('explanation-text');
+            explanationText.innerHTML = `
+                <strong>Estadísticas de la habitación:</strong><br>
+                • Tiempo completado: ${minutes}:${seconds.toString().padStart(2, '0')}<br>
+                • Peligros encontrados: ${gameState.foundDangers.size}/${rooms[gameState.currentRoom].dangers.length}<br>
+                • Errores cometidos: ${gameState.wrongClicks}<br>
+                • Pistas usadas: ${gameState.hintsUsed}/3<br>
+                • Puntuación final: ${gameState.roomScore + bonusPoints}
+            `;
+            explanationEl.classList.remove('hidden');
+            
+            setTimeout(() => {
+                if (gameState.player.completedRooms.length >= 6) {
+                    showCompletion();
+                } else {
+                    showGame();
+                }
+            }, 5000);
+        }
+
+        function calculateAchievements() {
+            const achievements = [];
+            
+            if (gameState.player.completedRooms.includes('kitchen')) {
+                achievements.push({ emoji: '🍳', name: 'Chef Seguro' });
+            }
+            if (gameState.player.completedRooms.includes('bathroom')) {
+                achievements.push({ emoji: '🛁', name: 'Baño Seguro' });
+            }
+            if (gameState.player.completedRooms.includes('basement')) {
+                achievements.push({ emoji: '💀', name: 'Superviviente' });
+            }
+            
+            if (gameState.player.score >= 5000) {
+                achievements.push({ emoji: '💎', name: 'Puntuación Alta' });
+            }
+            if (gameState.player.score >= 10000) {
+                achievements.push({ emoji: '👑', name: 'Rey de la Seguridad' });
+            }
+            
+            if (gameState.player.completedRooms.length === 6) {
+                achievements.push({ emoji: '🏆', name: 'Completista' });
+            }
+            if (gameState.player.streak >= 10) {
+                achievements.push({ emoji: '🔥', name: 'Racha Perfecta' });
+            }
+            
+            if (gameState.survivalModeRecord >= 5) {
+                achievements.push({ emoji: '⚡', name: 'Supervivencia Extrema' });
+            }
+            
+            return achievements;
+        }
+
+        // Additional game modes
+        function startDailyChallenge() {
+            const dailyRoom = generateDailyChallenge();
+            rooms['daily'] = dailyRoom;
+            gameState.gameMode = 'daily';
+            gameState.currentRoom = 'daily';
+            
+            speak("¡Bienvenido al desafío diario! Esta es una habitación especial que cambia cada día. Tienes 60 segundos para encontrar todos los peligros misteriosos.", true);
+            
+            startRoom('daily');
+        }
+
+        function addPlayer() {
+            const playersSetup = document.getElementById('players-setup');
+            const playerCount = playersSetup.children.length + 1;
+            
+            if (playerCount > 6) {
+                showNotification('Máximo 6 jugadores permitidos', '⚠️');
+                return;
+            }
+            
+            const playerDiv = document.createElement('div');
+            playerDiv.className = 'flex items-center space-x-4 p-4 themed-bg rounded-xl border-2 border-gray-200';
+            playerDiv.innerHTML = `
+                <div class="avatar-emoji">👤</div>
+                <input type="text" placeholder="Nombre del Jugador ${playerCount}" class="flex-1 p-2 border rounded-lg themed-bg">
+                <button onclick="removePlayer(this)" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">❌</button>
+            `;
+            
+            playersSetup.appendChild(playerDiv);
+        }
+
+        function removePlayer(button) {
+            const playerDiv = button.parentElement;
+            playerDiv.remove();
+        }
+
+        function startMultiplayerGame() {
+            const playerInputs = document.querySelectorAll('#players-setup input');
+            const players = [];
+            
+            playerInputs.forEach((input, index) => {
+                if (input.value.trim()) {
+                    players.push({
+                        name: input.value.trim(),
+                        avatar: ['👦', '👧', '🧒', '👶', '🦸‍♂️', '🦸‍♀️'][index % 6],
+                        score: 0
+                    });
+                }
+            });
+            
+            if (players.length < 2) {
+                showNotification('Se necesitan al menos 2 jugadores', '⚠️');
+                return;
+            }
+            
+            gameState.gameMode = 'multiplayer';
+            gameState.multiplayerPlayers = players;
+            gameState.currentPlayerIndex = 0;
+            
+            speak(`¡Perfecto! Comenzamos el modo multijugador con ${players.length} jugadores. ${players[0].name} será el primero en jugar.`, true);
+            
+            showGame();
+        }
+
+        function startEvacuationDrill() {
+            showNotification('¡Simulacro de evacuación iniciado!', '🚨', 5000);
+            speak("¡Atención! Este es un simulacro de evacuación. Recuerda: mantén la calma, usa las salidas más cercanas, ve al punto de encuentro familiar y nunca regreses por objetos olvidados. ¡Practica con tu familia!", true);
+        }
+
+        function generateDetailedReport() {
+            const reportWindow = window.open('', '_blank');
+            reportWindow.document.write(`
+                <html>
+                <head>
+                    <title>Reporte Detallado de Progreso</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .header { background: #3b82f6; color: white; padding: 20px; border-radius: 10px; }
+                        .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 8px; }
+                        .progress-bar { background: #e5e7eb; height: 20px; border-radius: 10px; overflow: hidden; }
+                        .progress-fill { background: #10b981; height: 100%; transition: width 0.3s; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>📊 Reporte de Progreso Detallado</h1>
+                        <p>Jugador: ${gameState.player.name} ${gameState.player.avatar}</p>
+                        <p>Fecha: ${new Date().toLocaleDateString('es-ES')}</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h2>🏆 Resumen General</h2>
+                        <p><strong>Puntuación Total:</strong> ${gameState.player.score}</p>
+                        <p><strong>Habitaciones Completadas:</strong> ${gameState.player.completedRooms.length}/6</p>
+                        <p><strong>Stickers Coleccionados:</strong> ${gameState.player.collectedStickers.length}</p>
+                        <p><strong>Medallas Ganadas:</strong> ${gameState.player.earnedMedals.length}</p>
+                    </div>
+                    
+                    <div class="section">
+                        <h2>📈 Progreso por Habitación</h2>
+                        ${Object.keys(rooms).map(roomId => {
+                            const completed = gameState.player.completedRooms.includes(roomId);
+                            return `
+                                <div style="margin: 10px 0;">
+                                    <strong>${rooms[roomId].emoji} ${rooms[roomId].name}:</strong>
+                                    <span style="color: ${completed ? '#10b981' : '#ef4444'}">
+                                        ${completed ? '✅ Completada' : '⏳ Pendiente'}
+                                    </span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    
+                    <div class="section">
+                        <h2>🎯 Recomendaciones</h2>
+                        <ul>
+                            <li>Continúa practicando las habitaciones no completadas</li>
+                            <li>Revisa las guías de seguridad para reforzar conocimientos</li>
+                            <li>Practica el plan de evacuación familiar</li>
+                            <li>Comparte lo aprendido con amigos y familia</li>
+                        </ul>
+                    </div>
+                </body>
+                </html>
+            `);
+        }
+
+        function saveCustomRoom() {
+            const name = document.getElementById('custom-room-name').value.trim();
+            const theme = document.getElementById('custom-room-theme').value;
+            const difficulty = document.getElementById('custom-room-difficulty').value;
+            
+            if (!name) {
+                showNotification('Por favor ingresa un nombre para la habitación', '⚠️');
+                return;
+            }
+            
+            const customRoom = {
+                id: `custom_${Date.now()}`,
+                name: name,
+                theme: theme,
+                difficulty: difficulty,
+                createdAt: new Date().toISOString()
+            };
+            
+            gameState.player.customRooms.push(customRoom);
+            savePlayerData();
+            
+            showNotification('¡Habitación guardada exitosamente!', '💾');
+            updateSavedRoomsGrid();
+        }
+
+        function testCustomRoom() {
+            showNotification('¡Función de prueba próximamente!', '🧪');
+        }
+
+        function updateSavedRoomsGrid() {
+            const grid = document.getElementById('saved-rooms-grid');
+            grid.innerHTML = '';
+            
+            gameState.player.customRooms.forEach(room => {
+                const roomCard = document.createElement('div');
+                roomCard.className = 'themed-bg rounded-xl p-4 border-2 border-gray-200 shadow-lg';
+                roomCard.innerHTML = `
+                    <div class="text-center mb-3">
+                        <div class="room-emoji mb-2">🏗️</div>
+                        <h4 class="font-bold">${room.name}</h4>
+                        <div class="text-sm text-gray-600">${room.theme} • ${room.difficulty}</div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="playCustomRoom('${room.id}')" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-1 px-2 rounded text-sm">
+                            🎮 Jugar
+                        </button>
+                        <button onclick="deleteCustomRoom('${room.id}')" class="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded text-sm">
+                            🗑️
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(roomCard);
+            });
+            
+            if (gameState.player.customRooms.length === 0) {
+                grid.innerHTML = '<div class="text-center text-gray-500 col-span-full">No hay habitaciones guardadas aún</div>';
+            }
+        }
+
+        function playCustomRoom(roomId) {
+            showNotification('¡Función de juego personalizado próximamente!', '🎮');
+        }
+
+        function deleteCustomRoom(roomId) {
+            gameState.player.customRooms = gameState.player.customRooms.filter(room => room.id !== roomId);
+            savePlayerData();
+            updateSavedRoomsGrid();
+            showNotification('Habitación eliminada', '🗑️');
+        }
+
+        // Data persistence functions
+        async function savePlayerData() {
+            if (window.dataSdk) {
+                try {
+                    const playerRecord = {
+                        player_name: gameState.player.name,
+                        avatar: gameState.player.avatar,
+                        score: gameState.player.score,
+                        completed_rooms: JSON.stringify(gameState.player.completedRooms),
+                        collected_stickers: JSON.stringify(gameState.player.collectedStickers),
+                        earned_medals: JSON.stringify(gameState.player.earnedMedals),
+                        unlocked_avatars: JSON.stringify(gameState.player.unlockedAvatars),
+                        custom_rooms: JSON.stringify(gameState.player.customRooms),
+                        theme_preference: gameState.player.themePreference,
+                        total_play_time: gameState.player.totalPlayTime,
+                        sessions_played: gameState.player.sessionsPlayed,
+                        survival_record: gameState.survivalModeRecord,
+                        last_updated: new Date().toISOString()
+                    };
+
+                    const result = await window.dataSdk.create(playerRecord);
+                    if (result.isOk) {
+                        console.log('Player data saved successfully');
+                    } else {
+                        console.error('Failed to save player data:', result.error);
+                    }
+                } catch (error) {
+                    console.error('Error saving player data:', error);
+                }
+            } else {
+                // Fallback to localStorage
+                localStorage.setItem('safetyGameData', JSON.stringify(gameState.player));
+            }
+        }
+
+        function loadPlayerData() {
+            try {
+                const savedData = localStorage.getItem('safetyGameData');
+                if (savedData) {
+                    const playerData = JSON.parse(savedData);
+                    gameState.player = { ...gameState.player, ...playerData };
+                    
+                    // Apply saved theme
+                    if (gameState.player.themePreference) {
+                        changeTheme(gameState.player.themePreference);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading player data:', error);
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            
+            // Show welcome message after a short delay
+            setTimeout(() => {
+                speak("¡Bienvenido al Centro de Seguridad Doméstica! Aquí puedes aprender sobre seguridad de manera divertida. Explora diferentes modos de juego y conviértete en un experto en seguridad.", true);
+            }, 1000);
+        });
+
+        // Element SDK configuration
+        const elementConfig = {
+            defaultConfig: defaultConfig,
+            
+            async onConfigChange(config) {
+                // Update app title
+                const titleElement = document.getElementById('app-title');
+                if (titleElement) {
+                    titleElement.textContent = config.app_title || defaultConfig.app_title;
+                }
+                
+                // Update welcome message
+                const welcomeElement = document.getElementById('welcome-message');
+                if (welcomeElement) {
+                    welcomeElement.textContent = config.welcome_message || defaultConfig.welcome_message;
+                }
+                
+                // Update guide name
+                const guideElement = document.getElementById('guide-name');
+                if (guideElement) {
+                    guideElement.textContent = config.guide_name || defaultConfig.guide_name;
+                }
+                
+                // Update emergency number
+                const emergencyElement = document.getElementById('emergency-number');
+                if (emergencyElement) {
+                    emergencyElement.textContent = config.emergency_number || defaultConfig.emergency_number;
+                }
+            },
+            
+            mapToCapabilities(config) {
+                return {
+                    recolorables: [],
+                    borderables: [],
+                    fontEditable: undefined,
+                    fontSizeable: undefined
+                };
+            },
+            
+            mapToEditPanelValues(config) {
+                return new Map([
+                    ["app_title", config.app_title || defaultConfig.app_title],
+                    ["welcome_message", config.welcome_message || defaultConfig.welcome_message],
+                    ["guide_name", config.guide_name || defaultConfig.guide_name],
+                    ["emergency_number", config.emergency_number || defaultConfig.emergency_number]
+                ]);
+            }
+        };
+
+        // Initialize Element SDK
+        if (window.elementSdk) {
+            window.elementSdk.init(elementConfig);
+        }
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'995ced695208db36',t:'MTc2MTY4MDY2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
